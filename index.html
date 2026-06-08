@@ -3,404 +3,61 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TrilliumEco Carbon Footprint Tracker</title>
+    <title>TrilliumEco Tracker</title>
     <style>
-        :root {
-            --bg-main: #0b0f19;
-            --bg-card: #111827;
-            --bg-input: #1f2937;
-            --border-color: #374151;
-            --text-primary: #ffffff;
-            --text-muted: #9ca3af;
-            --accent-green: #10b981;
-            --accent-blue: #3b82f6;
-            --accent-red: #ef4444;
-        }
-
-        body {
-            background-color: var(--bg-main);
-            color: var(--text-primary);
-            font-family: 'Segoe UI', Arial, sans-serif;
-            margin: 0;
-            padding: 20px;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 25px;
-            max-width: 500px;
-        }
-
-        .header h1 {
-            color: var(--accent-green);
-            margin: 5px 0;
-            font-size: 2rem;
-        }
-
-        .header p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-        }
-
-        .card {
-            background-color: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            padding: 24px;
-            width: 100%;
-            max-width: 500px;
-            box-sizing: border-box;
-            margin-bottom: 20px;
-        }
-
-        .card h2 {
-            font-size: 1.2rem;
-            margin-top: 0;
-            margin-bottom: 15px;
-            color: var(--accent-green);
-        }
-
-        .guide-steps {
-            list-style: none;
-            padding: 0;
-            margin: 0;
-        }
-
-        .guide-steps li {
-            display: flex;
-            align-items: flex-start;
-            gap: 12px;
-            margin-bottom: 14px;
-            font-size: 0.9rem;
-            line-height: 1.4;
-            color: #cbd5e1;
-        }
-
-        .step-number {
-            background-color: var(--accent-blue);
-            color: #ffffff;
-            font-weight: bold;
-            border-radius: 50%;
-            min-width: 22px;
-            height: 22px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.8rem;
-        }
-
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-group label {
-            display: block;
-            margin-bottom: 6px;
-            font-size: 0.95rem;
-            font-weight: bold;
-        }
-
-        .input-hint {
-            font-size: 0.8rem;
-            color: var(--text-muted);
-            margin-bottom: 8px;
-        }
-
-        .input-group input {
-            width: 100%;
-            padding: 12px;
-            background-color: var(--bg-input);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            color: var(--text-primary);
-            box-sizing: border-box;
-            font-size: 1rem;
-        }
-
-        .btn {
-            width: 100%;
-            background-color: var(--accent-green);
-            color: var(--bg-main);
-            border: none;
-            padding: 14px;
-            border-radius: 8px;
-            font-size: 1rem;
-            font-weight: bold;
-            cursor: pointer;
-            transition: background 0.2s ease;
-        }
-
-        .btn:hover {
-            background-color: #059669;
-        }
-
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            background-color: var(--bg-input);
-            padding: 12px;
-            border-radius: 8px;
-            border: 1px solid var(--border-color);
-            cursor: pointer;
-            font-size: 0.88rem;
-            transition: border-color 0.2s ease;
-        }
-
-        .checkbox-label:hover {
-            border-color: var(--accent-green);
-        }
-
-        .checkbox-label input {
-            margin-right: 12px;
-            width: 18px;
-            height: 18px;
-            accent-color: var(--accent-green);
-            cursor: pointer;
-        }
-
-        .metric-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            font-size: 0.9rem;
-            margin: 8px 0;
-        }
-
-        .total-box {
-            background-color: rgba(239, 68, 68, 0.1);
-            border: 1px dashed var(--accent-red);
-            padding: 10px;
-            border-radius: 6px;
-            margin-top: 15px;
-        }
-
-        .target-box {
-            background-color: rgba(16, 185, 129, 0.1);
-            border: 1px dashed var(--accent-green);
-            padding: 10px;
-            border-radius: 6px;
-            margin-top: 10px;
-        }
-
-        .progress-bar-container {
-            background-color: var(--bg-input);
-            border-radius: 4px;
-            height: 8px;
-            width: 100%;
-            margin-top: 6px;
-            overflow: hidden;
-        }
-
-        .progress-bar {
-            background-color: var(--accent-green);
-            height: 100%;
-            width: 100%;
-            transition: width 0.3s ease;
-        }
-
-        .progress-bar.baseline {
-            background-color: var(--accent-red);
-        }
-
-        .summary-alert {
-            background: #1f2937;
-            padding: 12px;
-            border-radius: 8px;
-            border-left: 4px solid var(--accent-blue);
-            text-align: center;
-            font-size: 0.9rem;
-            font-weight: bold;
-        }
+        body { background: #0b0f19; color: #fff; font-family: sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .card { background: #111827; border: 1px solid #374151; border-radius: 12px; padding: 20px; width: 100%; max-width: 500px; margin-bottom: 20px; }
+        input { width: 100%; padding: 12px; margin: 8px 0; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: #10b981; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; }
+        .row { display: flex; justify-content: space-between; margin: 10px 0; }
     </style>
 </head>
 <body>
 
-    <div class="header">
-        <h1>🌱 TrilliumEco Tracker</h1>
-        <p>Personal Carbon Footprint & Reduction Simulator</p>
-    </div>
-
-    <div class="card" style="border-color: var(--accent-blue);">
-        <h2 style="color: var(--accent-blue);">📖 How to Use This Guide</h2>
-        <ul class="guide-steps">
-            <li>
-                <div class="step-number">1</div>
-                <div><strong>Electricity Data:</strong> Look at your monthly utility bill. Find the exact number listed as <strong>"Units Consumed"</strong> or <strong>"kWh"</strong> and type it below.</div>
-            </li>
-            <li>
-                <div class="step-number">2</div>
-                <div><strong>Travel Distances:</strong> Enter the average kilometers you drive daily. Use <strong>0</strong> for any vehicle type you don't use.</div>
-            </li>
-            <li>
-                <div class="step-number">3</div>
-                <div><strong>Interactive Reduction:</strong> Click <strong>"Calculate My Footprint"</strong>. Then, check the boxes in Section 2 to see how your live changes reduce your footprint target instantly!</div>
-            </li>
-        </ul>
-    </div>
-
     <div class="card">
-        <h2>1. Enter Your Everyday Numbers</h2>
-        
-        <div class="input-group">
-            <label for="monthlyKwh">Monthly Electricity Bill Units:</label>
-            <div class="input-hint">Just copy the raw units or kWh number direct from your statement.</div>
-            <input type="number" id="monthlyKwh" value="0" min="0">
-        </div>
-        
-        <hr style="border-color: var(--border-color); margin: 20px 0;">
-
-        <div class="input-group">
-            <label for="petrolKm">Daily Petrol Vehicle Travel (km):</label>
-            <div class="input-hint">How many kilometers do you drive a petrol bike or car on a normal day?</div>
-            <input type="number" id="petrolKm" value="0" min="0">
-        </div>
-
-        <div class="input-group">
-            <label for="ebikeKm">Daily Electric Bike Travel (km):</label>
-            <div class="input-hint">How many kilometers do you ride an electric scooter or bike on a normal day?</div>
-            <input type="number" id="ebikeKm" value="0" min="0">
-        </div>
-        
-        <button class="btn" onclick="calculateFootprint()">Calculate My Footprint</button>
+        <h2>Enter Data</h2>
+        <input type="number" id="kwh" placeholder="Monthly kWh">
+        <input type="number" id="petrol" placeholder="Daily Petrol km">
+        <input type="number" id="ebike" placeholder="Daily E-Bike km">
+        <button id="calcBtn">Calculate Footprint</button>
     </div>
 
-    <div class="card" id="resultsCard" style="display: none;">
-        <h2>2. Your Footprint & Live Reduction Options</h2>
-        
-        <div class="metric-row">
-            <span>💡 Grid Power Impact:</span>
-            <span id="lblPower">0.0 kg CO₂/yr</span>
-        </div>
-        <div class="metric-row">
-            <span>🚗 Petrol Travel Impact:</span>
-            <span id="lblPetrol">0.0 kg CO₂/yr</span>
-        </div>
-        <div class="metric-row">
-            <span>⚡ Electric Bike Impact:</span>
-            <span id="lblEbike">0.0 kg CO₂/yr</span>
-        </div>
-
-        <div class="total-box">
-            <div class="metric-row" style="margin: 0;">
-                <span style="font-weight: bold; color: var(--accent-red);">Gross Initial Footprint:</span>
-                <span id="lblGrossTotal" style="font-weight: bold; color: var(--accent-red);">0.0 kg CO₂/yr</span>
-            </div>
-            <div class="progress-bar-container">
-                <div class="progress-bar baseline"></div>
-            </div>
-        </div>
-
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 20px 0 10px 0; font-weight: bold;">
-            Select dynamic actions below to decrease your footprint target:
-        </p>
-        
-        <div class="checkbox-group">
-            <label class="checkbox-label">
-                <input type="checkbox" id="chkSolar" onchange="updateLiveAbatement()">
-                <span>Switch home grid to Solar Power (-800 kg/yr)</span>
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox" id="chkAppliances" onchange="updateLiveAbatement()">
-                <span>Turn off standby appliance vampire loads (-150 kg/yr)</span>
-            </label>
-            <label class="checkbox-label">
-                <input type="checkbox" id="chkCleanCharge" onchange="updateLiveAbatement()">
-                <span>Charge electric vehicle with solar power (-250 kg/yr)</span>
-            </label>
-        </div>
-
-        <div class="target-box">
-            <div class="metric-row" style="margin: 0;">
-                <span style="font-weight: bold; color: var(--accent-green);">Your New Modeled Target:</span>
-                <span id="lblTargetTotal" style="font-weight: bold; color: var(--accent-green);">0.0 kg CO₂/yr</span>
-            </div>
-            <div class="progress-bar-container">
-                <div class="progress-bar" id="targetBar" style="width: 100%;"></div>
-            </div>
-        </div>
-
-        <div class="metric-row" style="margin-top: 15px; margin-bottom: 15px;">
-            <span>📉 Total Saved Amount:</span>
-            <span id="lblTotalAbated" style="color: var(--accent-blue); font-weight: bold; font-size: 1.05rem;">0 kg CO₂/yr</span>
-        </div>
-
-        <div class="summary-alert" id="summaryFeedback">
-            Select checkboxes to start saving carbon emissions!
-        </div>
+    <div class="card" id="results" style="display:none;">
+        <h2>Results</h2>
+        <div class="row"><span>Gross:</span> <span id="gross">0</span></div>
+        <div class="row"><span>Target:</span> <span id="target">0</span></div>
+        <input type="checkbox" id="solar"> Solar (-800kg)<br>
+        <input type="checkbox" id="vampire"> Vampire Loads (-150kg)<br>
+        <input type="checkbox" id="evsolar"> Solar EV Charge (-250kg)
     </div>
 
     <script>
-        // Global State Parameters
-        let grossInitialFootprint = 0;
-        let powerEmissions = 0;
-        let petrolEmissions = 0;
-        let ebikeEmissions = 0;
-
-        function calculateFootprint() {
-            // Get inputs safely
-            const kwh = parseFloat(document.getElementById('monthlyKwh').value) || 0;
-            const petrolKm = parseFloat(document.getElementById('petrolKm').value) || 0;
-            const ebikeKm = parseFloat(document.getElementById('ebikeKm').value) || 0;
-
-            // Environmental math logic
-            powerEmissions = kwh * 0.85 * 12;
-            petrolEmissions = petrolKm * 0.21 * 365;
-            ebikeEmissions = ebikeKm * 0.01 * 0.5 * 30 * 0.85 * 12;
-
-            grossInitialFootprint = powerEmissions + petrolEmissions + ebikeEmissions;
-
-            // Render static source labels
-            document.getElementById('lblPower').innerText = powerEmissions.toFixed(1) + " kg CO₂/yr";
-            document.getElementById('lblPetrol').innerText = petrolEmissions.toFixed(1) + " kg CO₂/yr";
-            document.getElementById('lblEbike').innerText = ebikeEmissions.toFixed(1) + " kg CO₂/yr";
-            document.getElementById('lblGrossTotal').innerText = grossInitialFootprint.toFixed(1) + " kg CO₂/yr";
-
-            // Open up the consolidated dashboard card
-            document.getElementById('resultsCard').style.display = 'block';
-
-            // Run simulation check instantly
-            updateLiveAbatement();
-        }
-
-        function updateLiveAbatement() {
-            let totalSaved = 0;
-
-            // Read live checked flags
-            if (document.getElementById('chkSolar').checked) totalSaved += 800;
-            if (document.getElementById('chkAppliances').checked) totalSaved += 150;
-            if (document.getElementById('chkCleanCharge').checked) totalSaved += 250;
-
-            // Calculate floor total target
-            const dynamicTarget = Math.max(0, grossInitialFootprint - totalSaved);
+        // Force the function to be attached to the window so it is accessible
+        window.calculate = function() {
+            var kwh = parseFloat(document.getElementById('kwh').value) || 0;
+            var petrol = parseFloat(document.getElementById('petrol').value) || 0;
+            var ebike = parseFloat(document.getElementById('ebike').value) || 0;
             
-            // Calculate dynamic percentage bar width safely
-            const barWidthPercentage = grossInitialFootprint > 0 ? (dynamicTarget / grossInitialFootprint) * 100 : 0;
+            var gross = (kwh * 0.85 * 12) + (petrol * 0.21 * 365) + (ebike * 0.01 * 0.5 * 30 * 12);
+            
+            var saved = 0;
+            if(document.getElementById('solar').checked) saved += 800;
+            if(document.getElementById('vampire').checked) saved += 150;
+            if(document.getElementById('evsolar').checked) saved += 250;
+            
+            var target = gross - saved;
+            if(target < 0) target = 0;
+            
+            document.getElementById('results').style.display = 'block';
+            document.getElementById('gross').innerText = gross.toFixed(1) + " kg/yr";
+            document.getElementById('target').innerText = target.toFixed(1) + " kg/yr";
+        };
 
-            // Update DOM text outputs
-            document.getElementById('lblTargetTotal').innerText = dynamicTarget.toFixed(1) + " kg CO₂/yr";
-            document.getElementById('lblTotalAbated').innerText = totalSaved + " kg CO₂/yr";
-            document.getElementById('targetBar').style.width = barWidthPercentage + "%";
-
-            // Update interactive bottom tip context box
-            const feedbackBox = document.getElementById('summaryFeedback');
-            if (totalSaved === 0) {
-                feedbackBox.style.borderColor = "var(--accent-blue)";
-                feedbackBox.innerHTML = "💡 Select action options above to see your target bar drop!";
-            } else {
-                feedbackBox.style.borderColor = "var(--accent-green)";
-                feedbackBox.innerHTML = 🎉 Amazing! You are preventing ${totalSaved} kg of CO₂ from entering the atmosphere annually!;
-            }
-        }
+        // Attach listeners
+        document.getElementById('calcBtn').onclick = window.calculate;
+        document.getElementById('solar').onchange = window.calculate;
+        document.getElementById('vampire').onchange = window.calculate;
+        document.getElementById('evsolar').onchange = window.calculate;
     </script>
 </body>
 </html>
