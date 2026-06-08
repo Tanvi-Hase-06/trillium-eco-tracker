@@ -18,12 +18,12 @@
         .card { background-color: var(--bg-card); border: 1px solid #374151; border-radius: 12px; padding: 24px; width: 100%; max-width: 550px; margin-bottom: 20px; }
         h1 { color: var(--accent-green); text-align: center; margin-bottom: 25px; }
         h2 { color: var(--accent-green); font-size: 1.2rem; margin-bottom: 15px; }
-        .guide-box { background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--accent-blue); padding: 15px; border-radius: 4px; margin-bottom: 20px; }
-        .guide-box ol { margin: 0; padding-left: 20px; font-size: 0.9rem; color: var(--text-muted); }
+        .info-box { background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--accent-blue); padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .info-box ul, .info-box ol { margin: 5px 0; padding-left: 20px; font-size: 0.9rem; color: var(--text-muted); }
         input { width: 100%; padding: 12px; margin: 8px 0; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: white; box-sizing: border-box; }
         button { width: 100%; padding: 15px; background: var(--accent-green); border: none; border-radius: 8px; cursor: pointer; color: #0b0f19; font-weight: bold; margin-top: 10px; }
         .metric-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #374151; font-size: 0.95rem; }
-        .action-card { background: #1f2937; border: 1px solid #374151; padding: 15px; border-radius: 8px; margin: 10px 0; display: flex; align-items: start; gap: 10px; }
+        .action-card { background: #1f2937; border: 1px solid #374151; padding: 15px; border-radius: 8px; margin: 10px 0; display: flex; align-items: start; gap: 10px; cursor: pointer; }
         .action-card input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--accent-green); }
     </style>
 </head>
@@ -31,14 +31,20 @@
 
     <h1>🌱 TrilliumEco Carbon Tracker</h1>
 
-    <!-- New Guide Section -->
-    <div class="card guide-box">
-        <h2>📖 How to Use</h2>
+    <!-- Extended Info Section -->
+    <div class="card info-box">
+        <h2>📖 User Guide</h2>
         <ol>
-            <li>Enter your monthly electricity usage (kWh) and daily travel distances.</li>
-            <li>Click "Compile Analytics" to see your current annual carbon footprint.</li>
-            <li>Select checkboxes in the Abatement section to model how lifestyle changes reduce your emissions.</li>
+            <li><strong>Input Data:</strong> Enter your monthly home energy (kWh), daily petrol usage, and e-bike commute.</li>
+            <li><strong>Analyze:</strong> Click "Compile Analytics" to view your annual carbon output broken down by source.</li>
+            <li><strong>Reduce:</strong> Toggle the Abatement Options below to see how specific lifestyle shifts lower your footprint.</li>
         </ol>
+        <h2 style="margin-top:15px;">🔍 Understanding Metrics</h2>
+        <ul>
+            <li><strong>Grid Impact:</strong> Emissions from non-renewable residential electricity.</li>
+            <li><strong>Internal Combustion:</strong> Tailpipe emissions from fossil-fuel transport.</li>
+            <li><strong>EV Infrastructure:</strong> Lifecycle carbon cost of electric mobility.</li>
+        </ul>
     </div>
 
     <div class="card">
@@ -56,11 +62,12 @@
         <div class="metric-row"><span>EV Infrastructure:</span> <span id="lblEv">0 kg/yr</span></div>
         <div class="metric-row" style="border:none; margin-top:10px;"><strong>Gross Initial Footprint:</strong> <strong id="lblGross" style="color:var(--accent-red)">0 kg/yr</strong></div>
         <div class="metric-row"><strong>Modeled Abatement Target:</strong> <strong id="lblTarget" style="color:var(--accent-green)">0 kg/yr</strong></div>
+        <div class="metric-row"><strong>Atmospheric Impact:</strong> <strong id="lblPercent" style="color:var(--accent-blue)">100%</strong></div>
         
         <h2 style="margin-top: 25px;">3. Carbon Abatement Options</h2>
-        <label class="action-card"><input type="checkbox" id="chkSolar" class="reducer"> <div><strong>Solar PV Transition (-800kg)</strong><br><small>Switch to renewable rooftop solar.</small></div></label>
-        <label class="action-card"><input type="checkbox" id="chkVampire" class="reducer"> <div><strong>Vampire Load Isolation (-150kg)</strong><br><small>Unplug inactive electronics.</small></div></label>
-        <label class="action-card"><input type="checkbox" id="chkEvSolar" class="reducer"> <div><strong>Offset Solar EV Charge (-250kg)</strong><br><small>Sync charging with solar peak.</small></div></label>
+        <label class="action-card"><input type="checkbox" id="chkSolar" class="reducer"> <div><strong>Solar PV Transition (-800kg)</strong><br><small>Adopt renewable energy.</small></div></label>
+        <label class="action-card"><input type="checkbox" id="chkVampire" class="reducer"> <div><strong>Vampire Load Isolation (-150kg)</strong><br><small>Eliminate standby waste.</small></div></label>
+        <label class="action-card"><input type="checkbox" id="chkEvSolar" class="reducer"> <div><strong>Offset Solar EV Charge (-250kg)</strong><br><small>Solar-synced charging.</small></div></label>
     </div>
 
     <script>
@@ -80,6 +87,7 @@
             if(document.getElementById('chkEvSolar').checked) saved += 250;
 
             var target = Math.max(0, gross - saved);
+            var percent = gross > 0 ? ((target / gross) * 100).toFixed(1) : 0;
 
             document.getElementById('resultsCard').style.display = 'block';
             document.getElementById('lblGrid').innerText = gridImpact.toFixed(1) + " kg/yr";
@@ -87,6 +95,7 @@
             document.getElementById('lblEv').innerText = evImpact.toFixed(1) + " kg/yr";
             document.getElementById('lblGross').innerText = gross.toFixed(1) + " kg CO₂/yr";
             document.getElementById('lblTarget').innerText = target.toFixed(1) + " kg CO₂/yr";
+            document.getElementById('lblPercent').innerText = percent + "% of original impact";
         }
 
         document.getElementById('calcBtn').addEventListener('click', calculate);
