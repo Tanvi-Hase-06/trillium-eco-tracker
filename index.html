@@ -3,61 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TrilliumEco Tracker</title>
+    <title>TrilliumEco Carbon Tracker</title>
     <style>
-        body { background: #0b0f19; color: #fff; font-family: sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
-        .card { background: #111827; border: 1px solid #374151; border-radius: 12px; padding: 20px; width: 100%; max-width: 500px; margin-bottom: 20px; }
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #111827;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+            --text-primary: #ffffff;
+            --text-muted: #9ca3af;
+        }
+        body { background-color: var(--bg-main); color: var(--text-primary); font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .card { background-color: var(--bg-card); border: 1px solid #374151; border-radius: 12px; padding: 24px; width: 100%; max-width: 550px; margin-bottom: 20px; }
+        h1 { color: var(--accent-green); text-align: center; margin-bottom: 25px; }
+        h2 { color: var(--accent-green); font-size: 1.2rem; margin-bottom: 15px; }
         input { width: 100%; padding: 12px; margin: 8px 0; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: #10b981; border: none; border-radius: 8px; cursor: pointer; color: white; font-weight: bold; }
-        .row { display: flex; justify-content: space-between; margin: 10px 0; }
+        button { width: 100%; padding: 15px; background: var(--accent-green); border: none; border-radius: 8px; cursor: pointer; color: #0b0f19; font-weight: bold; margin-top: 10px; }
+        .metric-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #374151; font-size: 0.95rem; }
+        
+        /* New Action Card Styles */
+        .action-card { background: #1f2937; border: 1px solid #374151; padding: 15px; border-radius: 10px; margin: 10px 0; display: flex; align-items: start; gap: 15px; cursor: pointer; }
+        .action-card:hover { border-color: var(--accent-green); }
+        .action-card input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--accent-green); }
+        .action-info strong { display: block; color: var(--accent-green); margin-bottom: 4px; }
+        .action-info span { font-size: 0.85rem; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
+    <h1>🌱 TrilliumEco Carbon Tracker</h1>
+
     <div class="card">
-        <h2>Enter Data</h2>
+        <h2>1. Carbon Telemetry Input</h2>
         <input type="number" id="kwh" placeholder="Monthly kWh">
         <input type="number" id="petrol" placeholder="Daily Petrol km">
         <input type="number" id="ebike" placeholder="Daily E-Bike km">
-        <button id="calcBtn">Calculate Footprint</button>
+        <button id="calcBtn">Compile Analytics</button>
     </div>
 
-    <div class="card" id="results" style="display:none;">
-        <h2>Results</h2>
-        <div class="row"><span>Gross:</span> <span id="gross">0</span></div>
-        <div class="row"><span>Target:</span> <span id="target">0</span></div>
-        <input type="checkbox" id="solar"> Solar (-800kg)<br>
-        <input type="checkbox" id="vampire"> Vampire Loads (-150kg)<br>
-        <input type="checkbox" id="evsolar"> Solar EV Charge (-250kg)
+    <div class="card" id="resultsCard" style="display: none;">
+        <h2>2. Compiled Footprint Metrics</h2>
+        <div class="metric-row"><span>Grid Power Impact:</span> <span id="lblGrid">0 kg/yr</span></div>
+        <div class="metric-row"><span>Internal Combustion:</span> <span id="lblPetrol">0 kg/yr</span></div>
+        <div class="metric-row"><span>EV Infrastructure:</span> <span id="lblEv">0 kg/yr</span></div>
+        <div class="metric-row" style="border:none; margin-top:10px;"><strong>Gross Initial Footprint:</strong> <strong id="lblGross" style="color:var(--accent-red)">0 kg/yr</strong></div>
+        <div class="metric-row"><strong>Modeled Abatement Target:</strong> <strong id="lblTarget" style="color:var(--accent-green)">0 kg/yr</strong></div>
+        
+        <h2 style="margin-top: 25px;">3. Carbon Abatement Options</h2>
+        
+        <label class="action-card">
+            <input type="checkbox" id="chkSolar" class="reducer">
+            <div class="action-info">
+                <strong>Solar PV Transition (-800kg)</strong>
+                <span>Switch your residence from grid electricity to clean, renewable rooftop solar power.</span>
+            </div>
+        </label>
+        
+        <label class="action-card">
+            <input type="checkbox" id="chkVampire" class="reducer">
+            <div class="action-info">
+                <strong>Vampire Load Isolation (-150kg)</strong>
+                <span>Unplug standby electronics to eliminate hidden power waste.</span>
+            </div>
+        </label>
+        
+        <label class="action-card">
+            <input type="checkbox" id="chkEvSolar" class="reducer">
+            <div class="action-info">
+                <strong>Offset Solar EV Charge (-250kg)</strong>
+                <span>Configure e-bike charging cycles to sync only with active solar output.</span>
+            </div>
+        </label>
     </div>
 
     <script>
-        // Force the function to be attached to the window so it is accessible
-        window.calculate = function() {
+        function calculate() {
             var kwh = parseFloat(document.getElementById('kwh').value) || 0;
             var petrol = parseFloat(document.getElementById('petrol').value) || 0;
             var ebike = parseFloat(document.getElementById('ebike').value) || 0;
-            
-            var gross = (kwh * 0.85 * 12) + (petrol * 0.21 * 365) + (ebike * 0.01 * 0.5 * 30 * 12);
+
+            var gridImpact = kwh * 0.85 * 12;
+            var petrolImpact = petrol * 0.21 * 365;
+            var evImpact = ebike * 0.01 * 0.5 * 30 * 12;
+            var gross = gridImpact + petrolImpact + evImpact;
             
             var saved = 0;
-            if(document.getElementById('solar').checked) saved += 800;
-            if(document.getElementById('vampire').checked) saved += 150;
-            if(document.getElementById('evsolar').checked) saved += 250;
-            
-            var target = gross - saved;
-            if(target < 0) target = 0;
-            
-            document.getElementById('results').style.display = 'block';
-            document.getElementById('gross').innerText = gross.toFixed(1) + " kg/yr";
-            document.getElementById('target').innerText = target.toFixed(1) + " kg/yr";
-        };
+            if(document.getElementById('chkSolar').checked) saved += 800;
+            if(document.getElementById('chkVampire').checked) saved += 150;
+            if(document.getElementById('chkEvSolar').checked) saved += 250;
 
-        // Attach listeners
-        document.getElementById('calcBtn').onclick = window.calculate;
-        document.getElementById('solar').onchange = window.calculate;
-        document.getElementById('vampire').onchange = window.calculate;
-        document.getElementById('evsolar').onchange = window.calculate;
+            var target = Math.max(0, gross - saved);
+
+            document.getElementById('resultsCard').style.display = 'block';
+            document.getElementById('lblGrid').innerText = gridImpact.toFixed(1) + " kg/yr";
+            document.getElementById('lblPetrol').innerText = petrolImpact.toFixed(1) + " kg/yr";
+            document.getElementById('lblEv').innerText = evImpact.toFixed(1) + " kg/yr";
+            document.getElementById('lblGross').innerText = gross.toFixed(1) + " kg CO₂/yr";
+            document.getElementById('lblTarget').innerText = target.toFixed(1) + " kg CO₂/yr";
+        }
+
+        document.getElementById('calcBtn').addEventListener('click', calculate);
+        document.querySelectorAll('.reducer').forEach(el => el.addEventListener('change', calculate));
     </script>
 </body>
 </html>
