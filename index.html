@@ -33,11 +33,10 @@
     <div class="card info-box">
         <h2>📖 User Guide</h2>
         <ol>
-            <li>Input your home energy (kWh), daily petrol usage (km), and e-bike commute (km).</li>
-            <li>Select your primary dietary habit to account for food-based emissions.</li>
-            <li>Set your "Annual Reduction Goal" (in kg CO₂/yr).</li>
+            <li>Input your monthly home energy (kWh) and daily travel (km).</li>
+            <li>Select the dietary habit that best matches your daily intake.</li>
+            <li>Define your "Annual Reduction Goal" to measure your progress.</li>
         </ol>
-        <p style="font-size: 0.85rem; color: var(--accent-blue);" id="ecoFact"><em>Loading eco-fact...</em></p>
     </div>
 
     <div class="card">
@@ -48,12 +47,13 @@
         
         <label for="diet" style="font-size: 0.9rem;">Primary Dietary Habit:</label>
         <select id="diet">
-            <option value="" disabled selected>Choose your diet type...</option>
-            <option value="0">Plant-based (Minimal carbon footprint)</option>
-            <option value="500">Omnivore (Includes meat/dairy - ~500kg/yr)</option>
-            <option value="800">High Meat Consumption (~800kg/yr)</option>
+            <option value="" disabled selected>Select your diet type...</option>
+            <option value="100">Vegan (No animal products)</option>
+            <option value="250">Vegetarian (Includes dairy, veggies, dal, nuts)</option>
+            <option value="500">Omnivore Balanced (Meat, dairy, dal, veggies, bakery)</option>
+            <option value="800">High Meat/Processed (Frequent meat & processed foods)</option>
         </select>
-        <span class="helper-text">Indirect emissions estimation based on food production intensity.</span>
+        <span class="helper-text">Select the category that represents your regular, daily food intake.</span>
         
         <input type="number" id="goalInput" placeholder="Annual Reduction Goal (kg CO₂)">
         <button id="calcBtn">Compile Analytics</button>
@@ -76,9 +76,6 @@
     </div>
 
     <script>
-        const facts = ["Unplugging unused electronics saves ~150kg of CO2 per year!", "Plant-based diets can reduce your personal footprint by up to 500kg annually.", "Syncing EV charging with solar peak times maximizes renewable efficiency."];
-        document.getElementById('ecoFact').innerText = facts[Math.floor(Math.random() * facts.length)];
-
         function calculate() {
             var kwh = parseFloat(document.getElementById('kwh').value) || 0;
             var petrol = parseFloat(document.getElementById('petrol').value) || 0;
