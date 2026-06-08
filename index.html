@@ -105,10 +105,29 @@
             accent-color: #10b981;
         }
         .metric-item {
-            margin: 10px 0;
+            margin: 12px 0;
             font-size: 0.95rem;
             display: flex;
             justify-content: space-between;
+            align-items: center;
+        }
+        .progress-bar-container {
+            background-color: #1f2937;
+            border-radius: 6px;
+            height: 10px;
+            width: 100%;
+            margin-top: 5px;
+            margin-bottom: 15px;
+            overflow: hidden;
+        }
+        .progress-bar {
+            background-color: #10b981;
+            height: 100%;
+            width: 0%;
+            transition: width 0.4s ease;
+        }
+        .progress-bar.baseline {
+            background-color: #ff4a4a;
         }
         .insight-box {
             background: #1f2937; 
@@ -119,17 +138,23 @@
             font-size: 0.9rem; 
             line-height: 1.4;
         }
+        .status-badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
     </style>
 </head>
 <body>
 
-    <!-- Header Section -->
     <div class="header">
         <h1>⚡ TrilliumEco Tracker</h1>
         <p>Architecting Personal Carbon Efficiency & Power Optimization</p>
     </div>
 
-    <!-- Section 1: Inputs -->
     <div class="card">
         <h2>1. Carbon Telemetry Input (Track)</h2>
         <div class="input-group">
@@ -143,13 +168,11 @@
         <button class="btn" onclick="compileFootprint()">Compile Analytics</button>
     </div>
 
-    <!-- Section 2: Results -->
     <div class="card" id="insightsCard" style="display: none;">
         <h2>2. Architectural Insights Compiler (Understand)</h2>
         <div id="resultsDisplay"></div>
     </div>
 
-    <!-- Section 3: Optimization Vectors -->
     <div class="card" id="optimizationCard" style="display: none;">
         <h2>3. Hardware-Class Mitigation Vectors (Reduce)</h2>
         <p style="font-size: 0.85rem; color: #9ca3af; margin-bottom: 15px;">
@@ -166,12 +189,11 @@
             </label>
             <label class="checkbox-label">
                 <input type="checkbox" id="vector3" onchange="optimizeProfiles()">
-                <span>Optimize E-Bike Charging via Solar Off-Grid (-250 kg CO2e/yr)</span>
+                <span>Optimize Vehicle Charging via Solar Off-Grid (-250 kg CO2e/yr)</span>
             </label>
         </div>
     </div>
 
-    <!-- Interactive JavaScript Engine -->
     <script>
         let coreFootprint = 0;
         let originalGridEmissions = 0;
@@ -184,31 +206,40 @@
             // Environmental baseline emission coefficients
             originalGridEmissions = electricity * 0.85 * 12;
             
-            // Evaluates transit: detects if travel matches low emission parameters (e-bike range)
-            const emissionFactor = (commute <= 40) ? 0.05 : 0.21; 
+            // Evaluates transport baseline factor
+            const emissionFactor = (commute <= 40) ? 0.08 : 0.21; 
             originalTransportEmissions = commute * emissionFactor * 365;
             
             coreFootprint = originalGridEmissions + originalTransportEmissions;
 
-            // Unhide the analysis layout results blocks
+            // Reveal the layout results components
             document.getElementById('insightsCard').style.display = 'block';
             document.getElementById('optimizationCard').style.display = 'block';
 
-            // Run the system optimization logic
+            // Calculate profiles
             optimizeProfiles();
         }
 
         function optimizeProfiles() {
             let reduction = 0;
 
-            // Compile mitigation vector check statuses
+            // Track state values
             if (document.getElementById('vector1').checked) reduction += 800;
             if (document.getElementById('vector2').checked) reduction += 150;
             if (document.getElementById('vector3').checked) reduction += 250;
 
             const targetFootprint = Math.max(0, coreFootprint - reduction);
+            const remainingPercentage = coreFootprint > 0 ? (targetFootprint / coreFootprint) * 100 : 0;
 
-            // Dynamically rewrite layout updates to the browser interface with customized insights
+            // Choose status badge layout variant
+            let badgeHTML = <span class="status-badge" style="background-color: #ef4444; color: #ffffff;">Standard Load</span>;
+            if (reduction >= 1000) {
+                badgeHTML = <span class="status-badge" style="background-color: #10b981; color: #0b0f19;">Eco Optimized</span>;
+            } else if (reduction > 0) {
+                badgeHTML = <span class="status-badge" style="background-color: #f59e0b; color: #0b0f19;">Mitigation Active</span>;
+            }
+
+            // Dynamically write interactive layout updates to interface
             document.getElementById('resultsDisplay').innerHTML = `
                 <div class="metric-item">
                     <span>Domestic Grid Footprint:</span>
@@ -218,20 +249,34 @@
                     <span>Transit System Footprint:</span>
                     <strong>${originalTransportEmissions.toFixed(2)} kg CO2e/yr</strong>
                 </div>
-                <hr style="border-color: #1f2937; margin: 12px 0;">
+                
+                <hr style="border-color: #1f2937; margin: 16px 0;">
+                
                 <div class="metric-item">
-                    <span>Total Baseline Environmental Load:</span>
-                    <strong style="color: #ff4a4a;">${coreFootprint.toFixed(2)} kg CO2e/year</strong>
+                    <span>Baseline Footprint:</span>
+                    <strong style="color: #ff4a4a;">${coreFootprint.toFixed(2)} kg CO2e/yr</strong>
                 </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar baseline" style="width: 100%"></div>
+                </div>
+
                 <div class="metric-item">
-                    <span>Optimized System Target:</span>
-                    <strong style="color: #10b981;">${targetFootprint.toFixed(2)} kg CO2e/year</strong>
+                    <span>Optimized Target Footprint:</span>
+                    <strong style="color: #10b981;">${targetFootprint.toFixed(2)} kg CO2e/yr</strong>
+                </div>
+                <div class="progress-bar-container">
+                    <div class="progress-bar" style="width: ${remainingPercentage}%"></div>
+                </div>
+
+                <div class="metric-item">
+                    <span>System Status:</span>
+                    ${badgeHTML}
                 </div>
                 
                 <div class="insight-box">
-                    <strong>💡 Personalized Insights:</strong><br>
-                    • Your transit footprint is optimized via electric mobility. Charging your vehicle battery accounts for roughly <strong>5.10 kWh</strong> of your monthly home grid consumption.<br>
-                    • Selected mitigations successfully scale down your systemic environmental footprint load by <span style="color: #10b981; font-weight: bold;">${reduction} kg CO2e/year</span>.
+                    <strong>💡 Personalized Insights & Analytics:</strong><br>
+                    • Your current transit profile indicates high resource efficiency. Vehicle battery maintenance is estimated to make up roughly <strong>5.10 kWh</strong> of your tracking environment.<br>
+                    • Activating your mitigation hardware profiles decreases total grid load output by <span style="color: #10b981; font-weight: bold;">${reduction} kg CO2e/year</span>.
                 </div>
             `;
         }
