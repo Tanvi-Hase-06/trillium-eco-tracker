@@ -35,17 +35,6 @@
             margin-top: 5px;
             line-height: 1.4;
         }
-        .info-box {
-            background-color: #1e293b;
-            border-left: 4px solid #3b82f6;
-            padding: 12px 16px;
-            border-radius: 8px;
-            font-size: 0.85rem;
-            color: #cbd5e1;
-            margin-bottom: 20px;
-            text-align: left;
-            line-height: 1.4;
-        }
         .card {
             background-color: #111827;
             border: 1px solid #1f2937;
@@ -67,9 +56,10 @@
         }
         .input-group label {
             display: block;
-            margin-bottom: 6px;
-            font-size: 0.9rem;
+            margin-bottom: 4px;
+            font-size: 0.95rem;
             font-weight: bold;
+            color: #ffffff;
         }
         .input-hint {
             font-size: 0.8rem;
@@ -174,58 +164,58 @@
 
     <div class="header">
         <h1>🌱 TrilliumEco Tracker</h1>
-        <p>A simple tool to measure your daily environmental impact and find smart ways to lower it.</p>
-    </div>
-
-    <div class="card" style="padding: 18px; margin-bottom: 15px;">
-        <div class="info-box" style="margin-bottom: 0;">
-            <strong>ℹ️ How to use this tracker:</strong><br>
-            1. Enter your household power usage and daily travel distance below.<br>
-            2. Click <strong>"Calculate My Footprint"</strong> to see your annual impact in kilograms of CO₂.<br>
-            3. Turn on the eco-friendly checkboxes at the bottom to see how much pollution you can save!
-        </div>
+        <p>Calculate your personal carbon footprint easily. Fill only what you use!</p>
     </div>
 
     <div class="card">
-        <h2>1. Track Your Footprint</h2>
+        <h2>1. Enter Your Everyday Numbers</h2>
         
         <div class="input-group">
-            <label for="electricity">Monthly Electricity Usage (kWh):</label>
-            <div class="input-hint">Look at your electricity bill or type a typical number like 150. If you charge an electric vehicle at home, add 5 kWh.</div>
-            <input type="number" id="electricity" placeholder="eg 155">
+            <label for="electricity">Monthly Electricity Bill Units:</label>
+            <div class="input-hint">Look on your bill for <strong>"Units Consumed"</strong> or <strong>"kWh"</strong> and type it here.</div>
+            <input type="number" id="electricity" placeholder="eg 150">
         </div>
         
+        <hr style="border-color: #1f2937; margin: 20px 0;">
+        <p style="font-size: 0.85rem; color: #9ca3af; margin-top: -10px; margin-bottom: 15px;">💡 For travel, only enter km for the vehicles you actually ride. Leave others as 0.</p>
+
         <div class="input-group">
-            <label for="commute">Daily Travel Distance (km):</label>
-            <div class="input-hint">How many total kilometers do you travel in a single day for college or work?</div>
-            <input type="number" id="commute" placeholder="eg 34">
+            <label for="petrolCommute">Daily Petrol Vehicle Travel (km):</label>
+            <div class="input-hint">How many kilometers do you drive a petrol bike/car on a normal day? (Put 0 if none)</div>
+            <input type="number" id="petrolCommute" placeholder="eg 20" value="0">
+        </div>
+
+        <div class="input-group">
+            <label for="ebikeCommute">Daily Electric Bike Travel (km):</label>
+            <div class="input-hint">How many kilometers do you ride an electric bike/scooter on a normal day? (Put 0 if none)</div>
+            <input type="number" id="ebikeCommute" placeholder="eg 34" value="0">
         </div>
         
         <button class="btn" onclick="compileFootprint()">Calculate My Footprint</button>
     </div>
 
     <div class="card" id="insightsCard" style="display: none;">
-        <h2>2. Understand Your Impact</h2>
+        <h2>2. Your Carbon Footprint Breakdown</h2>
         <div id="resultsDisplay"></div>
     </div>
 
     <div class="card" id="optimizationCard" style="display: none;">
-        <h2>3. Choose Ways to Reduce Your Impact</h2>
+        <h2>3. Simple Ways to Lower Your Impact</h2>
         <p style="font-size: 0.85rem; color: #9ca3af; margin-bottom: 15px;">
-            Check these sustainable choices to see how drastically they can shrink your yearly footprint:
+            Check these boxes to see how much pollution you can prevent each year:
         </p>
         <div class="checkbox-group">
             <label class="checkbox-label">
                 <input type="checkbox" id="vector1" onchange="optimizeProfiles()">
-                <span>Switch home power to solar/microgrids (-800 kg CO₂/yr)</span>
+                <span>Switch home electricity to solar panels (-800 kg CO₂/yr)</span>
             </label>
             <label class="checkbox-label">
                 <input type="checkbox" id="vector2" onchange="optimizeProfiles()">
-                <span>Turn off computers & appliances when idle (-150 kg CO₂/yr)</span>
+                <span>Turn off laptops & appliances when not using them (-150 kg CO₂/yr)</span>
             </label>
             <label class="checkbox-label">
                 <input type="checkbox" id="vector3" onchange="optimizeProfiles()">
-                <span>Charge electric vehicles with clean solar power (-250 kg CO₂/yr)</span>
+                <span>Use clean solar energy to charge your vehicles (-250 kg CO₂/yr)</span>
             </label>
         </div>
     </div>
@@ -234,32 +224,42 @@
         let coreFootprint = 0;
         let originalGridEmissions = 0;
         let originalTransportEmissions = 0;
+        let petrolEmissions = 0;
+        let ebikeGridEmissions = 0;
 
         function compileFootprint() {
-            const electricity = parseFloat(document.getElementById('electricity').value) || 0;
-            const commute = parseFloat(document.getElementById('commute').value) || 0;
+            const billUnits = parseFloat(document.getElementById('electricity').value) || 0;
+            const petrolKm = parseFloat(document.getElementById('petrolCommute').value) || 0;
+            const ebikeKm = parseFloat(document.getElementById('ebikeCommute').value) || 0;
 
-            // Environmental baseline emission calculations
-            originalGridEmissions = electricity * 0.85 * 12;
+            // 1. Calculate emissions from the household bill itself
+            const baseGridEmissions = billUnits * 0.85 * 12;
             
-            // Evaluates transit: recognizes electric bike efficiency if short distance
-            const emissionFactor = (commute <= 40) ? 0.08 : 0.21; 
-            originalTransportEmissions = commute * emissionFactor * 365;
+            // 2. Petrol vehicle: emissions are created directly by burning fuel on the road
+            petrolEmissions = petrolKm * 0.21 * 365;
             
-            coreFootprint = originalGridEmissions + originalTransportEmissions;
+            // 3. Electric vehicle: emissions are created at the power plant when charging from the wall
+            // 1km uses 1% battery capacity. A standard 100% full e-bike battery holds ~0.5 kWh.
+            const dailyEbikeKwh = ebikeKm * 0.01 * 0.5;
+            const monthlyEbikeUnits = dailyEbikeKwh * 30;
+            ebikeGridEmissions = monthlyEbikeUnits * 0.85 * 12;
 
-            // Reveal the results sections
+            // Group them cleanly into visual categories
+            originalGridEmissions = baseGridEmissions + ebikeGridEmissions;
+            originalTransportEmissions = petrolEmissions;
+            
+            coreFootprint = baseGridEmissions + ebikeGridEmissions + petrolEmissions;
+
+            // Show results layout
             document.getElementById('insightsCard').style.display = 'block';
             document.getElementById('optimizationCard').style.display = 'block';
 
-            // Calculate savings
             optimizeProfiles();
         }
 
         function optimizeProfiles() {
             let reduction = 0;
 
-            // Tracks how much carbon is saved
             if (document.getElementById('vector1').checked) reduction += 800;
             if (document.getElementById('vector2').checked) reduction += 150;
             if (document.getElementById('vector3').checked) reduction += 250;
@@ -267,7 +267,6 @@
             const targetFootprint = Math.max(0, coreFootprint - reduction);
             const remainingPercentage = coreFootprint > 0 ? (targetFootprint / coreFootprint) * 100 : 0;
 
-            // Updates the green/yellow/red badge status
             let badgeHTML = <span class="status-badge" style="background-color: #ef4444; color: #ffffff;">Standard Footprint</span>;
             if (reduction >= 1000) {
                 badgeHTML = <span class="status-badge" style="background-color: #10b981; color: #0b0f19;">Great Progress!</span>;
@@ -275,22 +274,36 @@
                 badgeHTML = <span class="status-badge" style="background-color: #f59e0b; color: #0b0f19;">Saving Active</span>;
             }
 
-            // Writes simple results directly to the screen
+            // Generate smart dynamic insight messages based on what the user inputted
+            const petrolKm = parseFloat(document.getElementById('petrolCommute').value) || 0;
+            const ebikeKm = parseFloat(document.getElementById('ebikeCommute').value) || 0;
+            let customizedText = "";
+
+            if (petrolKm > 0 && ebikeKm === 0) {
+                customizedText = "Your travel footprint comes entirely from burning petrol fuel. Consider shifting short tasks to walking to save fuel costs!";
+            } else if (ebikeKm > 0 && petrolKm === 0) {
+                customizedText = "Fantastic! By riding an electric bike instead of burning petrol, you keep direct vehicle pollution at zero. Your only minor impact comes from charging it via the home power lines.";
+            } else if (petrolKm > 0 && ebikeKm > 0) {
+                customizedText = "You use a mixed transit lifestyle! Your petrol vehicle releases carbon out of the exhaust pipe, while your clean electric bike splits its energy draw onto your home power system.";
+            } else {
+                customizedText = "Your low-travel profile keeps your personal transportation impact close to zero!";
+            }
+
             document.getElementById('resultsDisplay').innerHTML = `
                 <div class="metric-item">
-                    <span>Home Electricity Footprint:</span>
-                    <strong>${originalGridEmissions.toFixed(2)} kg CO₂/year</strong>
+                    <span>Electricity & Power Footprint:</span>
+                    <strong>${originalGridEmissions.toFixed(1)} kg CO₂/year</strong>
                 </div>
                 <div class="metric-item">
-                    <span>Travel & Commute Footprint:</span>
-                    <strong>${originalTransportEmissions.toFixed(2)} kg CO₂/year</strong>
+                    <span>Direct Petrol Tailpipe Footprint:</span>
+                    <strong>${originalTransportEmissions.toFixed(1)} kg CO₂/year</strong>
                 </div>
                 
                 <hr style="border-color: #1f2937; margin: 16px 0;">
                 
                 <div class="metric-item">
-                    <span>Your Starting Footprint:</span>
-                    <strong style="color: #ef4444;">${coreFootprint.toFixed(2)} kg CO₂/year</strong>
+                    <span>Your Total Starting Footprint:</span>
+                    <strong style="color: #ef4444;">${coreFootprint.toFixed(1)} kg CO₂/year</strong>
                 </div>
                 <div class="progress-bar-container">
                     <div class="progress-bar baseline" style="width: 100%"></div>
@@ -298,7 +311,7 @@
 
                 <div class="metric-item">
                     <span>Your New Target Footprint:</span>
-                    <strong style="color: #10b981;">${targetFootprint.toFixed(2)} kg CO₂/year</strong>
+                    <strong style="color: #10b981;">${targetFootprint.toFixed(1)} kg CO₂/year</strong>
                 </div>
                 <div class="progress-bar-container">
                     <div class="progress-bar" style="width: ${remainingPercentage}%"></div>
@@ -310,9 +323,9 @@
                 </div>
                 
                 <div class="insight-box">
-                    <strong>💡 Simple Breakdown:</strong><br>
-                    • Your travel habits are clean! Using a highly efficient transit method (like your electric bike) keeps emissions minimal. Charging your bike battery adds roughly <strong>5.10 kWh</strong> to your monthly power meter.<br>
-                    • By checking the choices below, you are successfully removing <span style="color: #10b981; font-weight: bold;">${reduction} kg of greenhouse gases</span> from the air each year!
+                    <strong>💡 Smart Summary:</strong><br>
+                    • ${customizedText}<br><br>
+                    • Activating your choices below prevents up to <span style="color: #10b981; font-weight: bold;">${reduction} kg of CO₂</span> from entering the atmosphere every year.
                 </div>
             `;
         }
