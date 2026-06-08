@@ -111,46 +111,46 @@
         </section>
     </main>
 
-    <script>
-        let coreFootprint = 0;
+   <script>
+    let coreFootprint = 0;
 
-        function compileFootprint() {
-            const electricity = parseFloat(document.getElementById('electricity').value) || 0;
-            const commute = parseFloat(document.getElementById('commute').value) || 0;
+    function compileFootprint() {
+        const electricity = parseFloat(document.getElementById('electricity').value) || 0;
+        const commute = parseFloat(document.getElementById('commute').value) || 0;
 
-            const annualGridEmissions = electricity * 0.85 * 12; 
-            const annualTransportEmissions = commute * 0.21 * 365; 
+        // Standard baseline emission factors
+        const annualGridEmissions = electricity * 0.85 * 12;
+        const annualTransportEmissions = commute * 0.21 * 365;
+        
+        coreFootprint = annualGridEmissions + annualTransportEmissions;
 
-            coreFootprint = annualGridEmissions + annualTransportEmissions;
+        // Unhide the results blocks
+        document.getElementById('insightsCard').style.display = 'block';
+        document.getElementById('optimizationCard').style.display = 'block';
 
-            renderDisplay(coreFootprint, 0);
+        // Run the math updater
+        updateOptimization();
+    }
 
-            document.getElementById('insightsCard').style.display = 'block';
-            document.getElementById('optimizationCard').style.display = 'block';
-        }
+    function updateOptimization() {
+        let reduction = 0;
 
-        function optimizeProfiles() {
-            let thermalSavings = 0;
-            if (document.getElementById('vector1').checked) thermalSavings += 800;
-            if (document.getElementById('vector2').checked) thermalSavings += 150;
-            if (document.getElementById('vector3').checked) thermalSavings += 1200;
+        // Calculate active mitigation vector profiles
+        if (document.getElementById('vector1').checked) reduction += 800;
+        if (document.getElementById('vector2').checked) reduction += 150;
+        if (document.getElementById('vector3').checked) reduction += 1200;
 
-            renderDisplay(coreFootprint, thermalSavings);
-        }
+        const targetFootprint = Math.max(0, coreFootprint - reduction);
 
-        function renderDisplay(base, savings) {
-            let optimizedTotal = base - savings;
-            if (optimizedTotal < 0) optimizedTotal = 0;
-
-            const summaryHTML = `
-                <p style="font-size: 1.1rem;">Total Compiled Baseline Load: <strong style="color:#ef4444;">${base.toFixed(2)} kg CO2e/year</strong></p>
-                <p style="font-size: 1.2rem; margin: 15px 0;">Optimized System Target: <strong style="color:#10b981;">${optimizedTotal.toFixed(2)} kg CO2e/year</strong></p>
-                <div style="background:#1f2937; padding: 12px; border-left: 4px solid #10b981; border-radius:4px; font-size:0.9rem; color:#9ca3af;">
-                    <strong>System Insight Summary:</strong> Implementing the selected mitigation layout vectors reduces system environmental strain by <strong>${savings} kg CO2e/year</strong>.
-                </div>
-            `;
-            document.getElementById('resultsDisplay').innerHTML = summaryHTML;
-        }
-    </script>
+        // Render responsive metrics onto UI
+        document.getElementById('resultsDisplay').innerHTML = `
+            <p>Total Compiled Baseline Load: <strong style="color: #ff4a4a;">${coreFootprint.toFixed(2)} kg CO2e/year</strong></p>
+            <p>Optimized System Target: <strong style="color: #10b981;">${targetFootprint.toFixed(2)} kg CO2e/year</strong></p>
+            <div class="summary-box" style="background: #1f2937; padding: 12px; border-radius: 8px; border-left: 4px solid #10b981; margin-top: 15px;">
+                <strong>System Insight Summary:</strong> Implementing the selected mitigation layout vectors reduces system environmental strain by <span style="color: #10b981; font-weight: bold;">${reduction} kg CO2e/year</span>.
+            </div>
+        `;
+    }
+</script>
 </body>
 </html>
