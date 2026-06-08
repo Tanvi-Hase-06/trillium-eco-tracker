@@ -1,4 +1,4 @@
- <!DOCTYPE html>
+[2:25 am, 9/6/2026] Tanvi Hase: <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -95,6 +95,113 @@
             document.getElementById('lblTarget').innerText = target.toFixed(1) + " kg/yr";
             document.getElementById('mitigationText').innerText = "Selected reduction frameworks prevent " + saved + " kg of atmospheric CO₂ loading annually.";
             document.getElementById('barTarget').value = gross > 0 ? (target / gross) * 100 : 0;
+        }
+
+        document.getElementById('calcBtn').addEventListener('click', calculate);
+        document.querySelectorAll('.reducer').forEach(el => el.addEventListener('change', calculate));
+    </script>
+</body>
+</html>
+[2:28 am, 9/6/2026] Tanvi Hase: <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrilliumEco Carbon Tracker</title>
+    <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #111827;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --text-primary: #ffffff;
+            --text-muted: #9ca3af;
+        }
+        body { background-color: var(--bg-main); color: var(--text-primary); font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .card { background-color: var(--bg-card); border: 1px solid #374151; border-radius: 12px; padding: 24px; width: 100%; max-width: 550px; margin-bottom: 20px; }
+        h1 { color: var(--accent-green); text-align: center; margin-bottom: 25px; }
+        h2 { color: var(--accent-green); font-size: 1.2rem; margin-bottom: 15px; }
+        .info-box { background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--accent-blue); padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        input, select { width: 100%; padding: 12px; margin: 8px 0; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: var(--accent-green); border: none; border-radius: 8px; cursor: pointer; color: #0b0f19; font-weight: bold; margin-top: 10px; }
+        .metric-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #374151; font-size: 0.95rem; }
+        .action-card { background: #1f2937; border: 1px solid #374151; padding: 15px; border-radius: 8px; margin: 10px 0; display: flex; align-items: start; gap: 10px; cursor: pointer; }
+        progress { width: 100%; height: 20px; accent-color: var(--accent-green); }
+        .helper-text { color: var(--text-muted); font-size: 0.75rem; margin-bottom: 10px; display: block; }
+    </style>
+</head>
+<body>
+
+    <h1>🌱 TrilliumEco Carbon Tracker</h1>
+
+    <div class="card info-box">
+        <h2>📖 User Guide</h2>
+        <ol>
+            <li>Input your monthly home energy (kWh) and daily travel (km).</li>
+            <li>Select the dietary habit that best matches your daily intake.</li>
+            <li>Define your "Annual Reduction Goal" to measure your progress.</li>
+        </ol>
+    </div>
+
+    <div class="card">
+        <h2>1. Carbon Telemetry Input</h2>
+        <input type="number" id="kwh" placeholder="Monthly Home Energy (kWh)">
+        <input type="number" id="petrol" placeholder="Daily Petrol Commute (km)">
+        <input type="number" id="ebike" placeholder="Daily E-Bike Commute (km)">
+        
+        <label for="diet" style="font-size: 0.9rem;">Primary Dietary Habit:</label>
+        <select id="diet">
+            <option value="" disabled selected>Select your diet type...</option>
+            <option value="100">Vegan (No animal products)</option>
+            <option value="250">Vegetarian (Includes dairy, veggies, dal, nuts)</option>
+            <option value="500">Omnivore Balanced (Meat, dairy, dal, veggies, bakery)</option>
+            <option value="800">High Meat/Processed (Frequent meat & processed foods)</option>
+        </select>
+        <span class="helper-text">Select the category that represents your regular, daily food intake.</span>
+        
+        <input type="number" id="goalInput" placeholder="Annual Reduction Goal (kg CO₂)">
+        <button id="calcBtn">Compile Analytics</button>
+    </div>
+
+    <div class="card" id="resultsCard" style="display: none;">
+        <h2>2. Compiled Footprint Metrics</h2>
+        <div class="metric-row"><span>Gross Initial Footprint:</span> <span id="lblGross">0 kg/yr</span></div>
+        <div class="metric-row"><span>Modeled Abatement:</span> <span id="lblTarget">0 kg/yr</span></div>
+        <div class="metric-row"><span>Atmospheric Impact:</span> <span id="lblPercent">100%</span></div>
+        <div style="margin-top: 15px;">
+            <p style="font-size: 0.9rem;"><strong>Goal Progress:</strong></p>
+            <progress id="goalBar" value="0" max="100"></progress>
+        </div>
+        
+        <h2 style="margin-top: 25px;">3. Carbon Abatement Options</h2>
+        <label class="action-card"><input type="checkbox" id="chkSolar" class="reducer"> <div><strong>Solar PV Transition (-800kg)</strong></div></label>
+        <label class="action-card"><input type="checkbox" id="chkVampire" class="reducer"> <div><strong>Vampire Load Isolation (-150kg)</strong></div></label>
+        <label class="action-card"><input type="checkbox" id="chkEvSolar" class="reducer"> <div><strong>Offset Solar EV Charge (-250kg)</strong></div></label>
+    </div>
+
+    <script>
+        function calculate() {
+            var kwh = parseFloat(document.getElementById('kwh').value) || 0;
+            var petrol = parseFloat(document.getElementById('petrol').value) || 0;
+            var ebike = parseFloat(document.getElementById('ebike').value) || 0;
+            var diet = parseFloat(document.getElementById('diet').value) || 0;
+            var goal = parseFloat(document.getElementById('goalInput').value) || 1;
+
+            var gross = (kwh * 0.85 * 12) + (petrol * 0.21 * 365) + (ebike * 0.01 * 0.5 * 30 * 12) + diet;
+            var saved = 0;
+            if(document.getElementById('chkSolar').checked) saved += 800;
+            if(document.getElementById('chkVampire').checked) saved += 150;
+            if(document.getElementById('chkEvSolar').checked) saved += 250;
+
+            var target = Math.max(0, gross - saved);
+            var percent = gross > 0 ? ((target / gross) * 100).toFixed(1) : 0;
+            var progress = Math.min(100, (saved / goal) * 100);
+
+            document.getElementById('resultsCard').style.display = 'block';
+            document.getElementById('lblGross').innerText = gross.toFixed(1) + " kg/yr";
+            document.getElementById('lblTarget').innerText = target.toFixed(1) + " kg/yr";
+            document.getElementById('lblPercent').innerText = percent + "% of original";
+            document.getElementById('goalBar').value = progress;
         }
 
         document.getElementById('calcBtn').addEventListener('click', calculate);
