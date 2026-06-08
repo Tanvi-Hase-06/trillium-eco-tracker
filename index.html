@@ -3,11 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TrilliumEco Tracker</title>
+    <title>TrilliumEco Carbon Footprint Tracker</title>
     <style>
+        :root {
+            --bg-main: #0b0f19;
+            --bg-card: #111827;
+            --bg-input: #1f2937;
+            --border-color: #374151;
+            --text-primary: #ffffff;
+            --text-muted: #9ca3af;
+            --accent-green: #10b981;
+            --accent-blue: #3b82f6;
+            --accent-red: #ef4444;
+        }
+
         body {
-            background-color: #0b0f19;
-            color: #f3f4f6;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
@@ -15,47 +27,50 @@
             flex-direction: column;
             align-items: center;
         }
+
         .header {
             text-align: center;
             margin-bottom: 25px;
-            max-width: 450px;
+            max-width: 480px;
         }
+
         .header h1 {
-            color: #10b981;
+            color: var(--accent-green);
             margin: 5px 0;
             font-size: 2rem;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
         }
+
         .header p {
-            color: #9ca3af;
+            color: var(--text-muted);
             font-size: 0.95rem;
             margin-top: 5px;
             line-height: 1.4;
         }
+
         .card {
-            background-color: #111827;
-            border: 1px solid #1f2937;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-color);
             border-radius: 12px;
             padding: 24px;
             width: 100%;
-            max-width: 450px;
+            max-width: 480px;
             box-sizing: border-box;
             margin-bottom: 20px;
         }
+
         .card h2 {
-            color: #10b981;
             font-size: 1.2rem;
             margin-top: 0;
             margin-bottom: 15px;
         }
+
+        /* How to use section step styling */
         .guide-steps {
             list-style: none;
             padding: 0;
             margin: 0;
         }
+
         .guide-steps li {
             display: flex;
             align-items: flex-start;
@@ -65,9 +80,10 @@
             line-height: 1.4;
             color: #cbd5e1;
         }
+
         .step-number {
-            background-color: #10b981;
-            color: #0b0f19;
+            background-color: var(--accent-blue);
+            color: #ffffff;
             font-weight: bold;
             border-radius: 50%;
             min-width: 22px;
@@ -77,68 +93,87 @@
             justify-content: center;
             font-size: 0.8rem;
         }
+
         .input-group {
             margin-bottom: 20px;
         }
+
         .input-group label {
             display: block;
-            margin-bottom: 4px;
+            margin-bottom: 6px;
             font-size: 0.95rem;
             font-weight: bold;
-            color: #ffffff;
         }
+
         .input-hint {
             font-size: 0.8rem;
-            color: #9ca3af;
+            color: var(--text-muted);
             margin-bottom: 8px;
             line-height: 1.3;
         }
+
         .input-group input {
             width: 100%;
             padding: 12px;
-            background-color: #1f2937;
-            border: 1px solid #374151;
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
-            color: #ffffff;
+            color: var(--text-primary);
             box-sizing: border-box;
             font-size: 1rem;
+            transition: border 0.2s;
         }
+
+        .input-group input:focus {
+            outline: none;
+            border-color: var(--accent-green);
+        }
+
+        /* Modern Vehicle Selection Toggles */
+        .vehicle-selection-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .checkbox-tile {
+            background-color: var(--bg-input);
+            border: 1px solid var(--border-color);
+            padding: 14px;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 0.95rem;
+            user-select: none;
+        }
+
+        .checkbox-tile input {
+            width: 18px;
+            height: 18px;
+            accent-color: var(--accent-green);
+            margin: 0;
+        }
+
         .btn {
             width: 100%;
-            background-color: #10b981;
-            color: #0b0f19;
+            background-color: var(--accent-green);
+            color: var(--bg-main);
             border: none;
             padding: 14px;
             border-radius: 8px;
             font-size: 1rem;
             font-weight: bold;
             cursor: pointer;
-            transition: background 0.2s;
+            transition: opacity 0.2s;
         }
+
         .btn:hover {
-            background-color: #059669;
+            opacity: 0.9;
         }
-        .checkbox-group {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-        .checkbox-label {
-            display: flex;
-            align-items: center;
-            background-color: #1f2937;
-            padding: 14px;
-            border-radius: 8px;
-            border: 1px solid #374151;
-            cursor: pointer;
-            font-size: 0.9rem;
-        }
-        .checkbox-label input {
-            margin-right: 12px;
-            width: 18px;
-            height: 18px;
-            accent-color: #10b981;
-        }
+
         .metric-item {
             margin: 12px 0;
             font-size: 0.95rem;
@@ -146,8 +181,9 @@
             justify-content: space-between;
             align-items: center;
         }
+
         .progress-bar-container {
-            background-color: #1f2937;
+            background-color: var(--bg-input);
             border-radius: 6px;
             height: 10px;
             width: 100%;
@@ -155,31 +191,34 @@
             margin-bottom: 15px;
             overflow: hidden;
         }
+
         .progress-bar {
-            background-color: #10b981;
+            background-color: var(--accent-green);
             height: 100%;
             width: 0%;
             transition: width 0.4s ease;
         }
+
         .progress-bar.baseline {
-            background-color: #ef4444;
+            background-color: var(--accent-red);
         }
+
         .insight-box {
-            background: #1f2937; 
+            background: var(--bg-input); 
             padding: 14px; 
             border-radius: 8px; 
-            border-left: 4px solid #10b981; 
+            border-left: 4px solid var(--accent-green); 
             margin-top: 15px; 
             font-size: 0.9rem; 
             line-height: 1.4;
         }
+
         .status-badge {
             display: inline-block;
             padding: 4px 8px;
             border-radius: 4px;
             font-size: 0.75rem;
             font-weight: bold;
-            text-transform: uppercase;
         }
     </style>
 </head>
@@ -187,51 +226,63 @@
 
     <div class="header">
         <h1>🌱 TrilliumEco Tracker</h1>
-        <p>Your simplified, interactive environmental footprint companion.</p>
+        <p>Calculate your verified annual carbon footprint using standard academic emission factors.</p>
     </div>
 
-    <div class="card" style="border-color: #3b82f6;">
-        <h2 style="color: #3b82f6; display: flex; align-items: center; gap: 8px;">📖 How to Use This Tracker</h2>
+    <div class="card" style="border-color: var(--accent-blue);">
+        <h2 style="color: var(--accent-blue);">📖 How to Use This Calculator</h2>
         <ul class="guide-steps">
             <li>
                 <div class="step-number">1</div>
-                <div>Find the total <strong>"Units Consumed"</strong> or <strong>"kWh"</strong> on your current monthly electricity statement and type it in.</div>
+                <div>Enter your monthly electricity bill amount in *Rs.* from your physical statement.</div>
             </li>
             <li>
                 <div class="step-number">2</div>
-                <div>Enter your average daily travel distance in kilometers. Fill only what matches your lifestyle, and feel free to leave the rest at 0!</div>
+                <div>Check the boxes for the vehicles you own. You can select *one, **both, or **none*! Your custom input fields will unlock instantly.</div>
             </li>
             <li>
                 <div class="step-number">3</div>
-                <div>Click the <strong>"Calculate My Footprint"</strong> button to compile your live reporting chart instantly.</div>
+                <div>Type your average daily travel distance and click *Calculate* to see your carbon report.</div>
             </li>
         </ul>
     </div>
 
     <div class="card">
-        <h2>1. Enter Your Everyday Numbers</h2>
+        <h2>1. Enter Your Environmental Data</h2>
         
         <div class="input-group">
-            <label for="billInput">Monthly Electricity Bill Units:</label>
-            <div class="input-hint">Just copy the raw units or kWh number direct from your statement.</div>
-            <input type="number" id="billInput" placeholder="eg 150">
+            <label for="billInRupees">Monthly Electricity Bill Amount (Rs.):</label>
+            <div class="input-hint">Enter your total monthly bill cost. The system automatically converts this to units (at Rs 7.5/unit).</div>
+            <input type="number" id="billInRupees" placeholder="e.g. 1125" min="0">
         </div>
         
-        <hr style="border-color: #1f2937; margin: 20px 0;">
+        <hr style="border-color: var(--border-color); margin: 20px 0;">
 
-        <div class="input-group">
-            <label for="petrolInput">Daily Petrol Vehicle Travel (km):</label>
-            <div class="input-hint">How many kilometers do you drive a petrol bike or car on a normal day?</div>
-            <input type="number" id="petrolInput" placeholder="eg 20" value="0">
+        <label style="display:block; font-weight:bold; margin-bottom:10px; font-size:0.95rem;">Select the Vehicle(s) You Ride:</label>
+        <div class="vehicle-selection-grid">
+            <label class="checkbox-tile">
+                <input type="checkbox" id="hasPetrol" onchange="toggleVehicleInputs()">
+                <span>Petrol Bike/Car</span>
+            </label>
+            <label class="checkbox-tile">
+                <input type="checkbox" id="hasEbike" onchange="toggleVehicleInputs()">
+                <span>Electric Bike</span>
+            </label>
         </div>
 
-        <div class="input-group">
-            <label for="ebikeInput">Daily Electric Bike Travel (km):</label>
-            <div class="input-hint">How many kilometers do you ride an electric scooter or bike on a normal day?</div>
-            <input type="number" id="ebikeInput" placeholder="eg 34" value="0">
+        <div class="input-group" id="petrolContainer" style="display: none;">
+            <label for="petrolDistance">Daily Petrol Vehicle Travel (km):</label>
+            <div class="input-hint">Average distance traveled on your petrol vehicle per day.</div>
+            <input type="number" id="petrolDistance" placeholder="e.g. 30" value="0" min="0">
+        </div>
+
+        <div class="input-group" id="ebikeContainer" style="display: none;">
+            <label for="ebikeDistance">Daily Electric Bike Travel (km):</label>
+            <div class="input-hint">Average distance traveled on your electric scooter or bike per day.</div>
+            <input type="number" id="ebikeDistance" placeholder="e.g. 34" value="0" min="0">
         </div>
         
-        <button class="btn" onclick="startCalculation()">Calculate My Footprint</button>
+        <button class="btn" onclick="processFootprint()">Calculate My Footprint</button>
     </div>
 
     <div class="card" id="insightsCard" style="display: none;">
@@ -240,130 +291,145 @@
     </div>
 
     <div class="card" id="optimizationCard" style="display: none;">
-        <h2>3. Simple Ways to Lower Your Impact</h2>
-        <p style="font-size: 0.85rem; color: #9ca3af; margin-bottom: 15px;">
-            Check these boxes to see how much pollution you can prevent each year:
+        <h2>3. Actions to Reduce Your Footprint</h2>
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">
+            Check these boxes to simulate your potential reduction savings path:
         </p>
         <div class="checkbox-group">
             <label class="checkbox-label">
-                <input type="checkbox" id="vector1" onchange="applySavings()">
-                <span>Switch home electricity to solar panels (-800 kg CO₂/yr)</span>
+                <input type="checkbox" id="action1" onchange="calculateReductions()">
+                <span>Install a residential rooftop solar array system (-800 kg CO₂/yr)</span>
             </label>
             <label class="checkbox-label">
-                <input type="checkbox" id="vector2" onchange="applySavings()">
-                <span>Turn off laptops & appliances when not using them (-150 kg CO₂/yr)</span>
+                <input type="checkbox" id="action2" onchange="calculateReductions()">
+                <span>Unplug unused power strips and home office equipment (-150 kg CO₂/yr)</span>
             </label>
             <label class="checkbox-label">
-                <input type="checkbox" id="vector3" onchange="applySavings()">
-                <span>Use clean solar energy to charge your vehicles (-250 kg CO₂/yr)</span>
+                <input type="checkbox" id="action3" onchange="calculateReductions()">
+                <span>Switch vehicle charging infrastructure to a clean solar grid (-250 kg CO₂/yr)</span>
             </label>
         </div>
     </div>
 
     <script>
-        // Global variables to store the footprint metrics securely
-        let totalStartingFootprint = 0;
-        let powerGridEmissions = 0;
-        let directPetrolEmissions = 0;
-        let hiddenUnitsFromEbike = 0;
+        // Global structural reporting variables
+        let overallCalculatedFootprint = 0;
+        let finalElectricityEmissions = 0;
+        let finalTransportationEmissions = 0;
 
-        function startCalculation() {
-            // Fetch inputs cleanly using completely basic names to prevent bugs
-            const rawBill = parseFloat(document.getElementById('billInput').value) || 0;
-            const rawPetrol = parseFloat(document.getElementById('petrolInput').value) || 0;
-            const rawEbike = parseFloat(document.getElementById('ebikeInput').value) || 0;
+        // Handles clean visual hiding/showing of boxes based on selected vehicle types
+        function toggleVehicleInputs() {
+            const showPetrol = document.getElementById('hasPetrol').checked;
+            const showEbike = document.getElementById('hasEbike').checked;
 
-            // 1. House footprint calculation
-            const baselineHouseEmissions = rawBill * 0.85 * 12;
+            document.getElementById('petrolContainer').style.display = showPetrol ? 'block' : 'none';
+            document.getElementById('ebikeContainer').style.display = showEbike ? 'block' : 'none';
 
-            // 2. Petrol vehicle footprint calculation
-            directPetrolEmissions = rawPetrol * 0.21 * 365;
+            // Reset values to zero if unselected to prevent ghost calculations
+            if (!showPetrol) document.getElementById('petrolDistance').value = "0";
+            if (!showEbike) document.getElementById('ebikeDistance').value = "0";
+        }
 
-            // 3. E-bike wall charging calculation
-            const dailyKwhDraw = rawEbike * 0.01 * 0.5;
-            hiddenUnitsFromEbike = dailyKwhDraw * 30;
-            const ebikeOverheadEmissions = hiddenUnitsFromEbike * 0.85 * 12;
+        function processFootprint() {
+            // Retrieve values safely
+            const costRupees = parseFloat(document.getElementById('billInRupees').value) || 0;
+            const kmPetrol = parseFloat(document.getElementById('petrolDistance').value) || 0;
+            const kmEbike = parseFloat(document.getElementById('ebikeDistance').value) || 0;
 
-            // Group and combine metrics safely
-            powerGridEmissions = baselineHouseEmissions + ebikeOverheadEmissions;
-            totalStartingFootprint = baselineHouseEmissions + ebikeOverheadEmissions + directPetrolEmissions;
+            // 1. STIPULATED FORMULA: Electricity Conversion & Annual Emissions
+            const derivedUnits = costRupees / 7.5; 
+            finalElectricityEmissions = derivedUnits * 0.85 * 12;
 
-            // Unhide presentation sections smoothly
+            // 2. STIPULATED FORMULA: Direct Petrol Tailpipe Emissions
+            const petrolEmissions = kmPetrol * 0.21 * 365;
+
+            // 3. STIPULATED FORMULA: E-Bike Grid Load Overhead Emissions
+            const ebikeEmissions = kmEbike * 0.01 * 0.5 * 30 * 0.85 * 12;
+
+            // Combine metrics according to category specifications
+            finalTransportationEmissions = petrolEmissions;
+            
+            // Note: Per systemic assignment logic, E-Bike load scales your utility generation balance
+            const adjustedGridEmissions = finalElectricityEmissions + ebikeEmissions;
+            
+            overallCalculatedFootprint = adjustedGridEmissions + finalTransportationEmissions;
+
+            // Update state metrics layout
             document.getElementById('insightsCard').style.display = 'block';
             document.getElementById('optimizationCard').style.display = 'block';
 
-            // Trigger the calculations view update
-            applySavings();
+            calculateReductions();
         }
 
-        function applySavings() {
-            let selectedReduction = 0;
+        function calculateReductions() {
+            let userSavings = 0;
 
-            if (document.getElementById('vector1').checked) selectedReduction += 800;
-            if (document.getElementById('vector2').checked) selectedReduction += 150;
-            if (document.getElementById('vector3').checked) selectedReduction += 250;
+            if (document.getElementById('action1').checked) userSavings += 800;
+            if (document.getElementById('action2').checked) userSavings += 150;
+            if (document.getElementById('action3').checked) userSavings += 250;
 
-            const targetFootprint = Math.max(0, totalStartingFootprint - selectedReduction);
-            const fillPercentage = totalStartingFootprint > 0 ? (targetFootprint / totalStartingFootprint) * 100 : 0;
+            const finalTarget = Math.max(0, overallCalculatedFootprint - userSavings);
+            const structuralPercentage = overallCalculatedFootprint > 0 ? (finalTarget / overallCalculatedFootprint) * 100 : 0;
 
-            let badgeMarkup = <span class="status-badge" style="background-color: #ef4444; color: #ffffff;">Standard Footprint</span>;
-            if (selectedReduction >= 1000) {
-                badgeMarkup = <span class="status-badge" style="background-color: #10b981; color: #0b0f19;">Great Progress!</span>;
-            } else if (selectedReduction > 0) {
-                badgeMarkup = <span class="status-badge" style="background-color: #f59e0b; color: #0b0f19;">Saving Active</span>;
+            let structuralBadge = <span class="status-badge" style="background-color: var(--accent-red); color: #ffffff;">Standard Profile</span>;
+            if (userSavings >= 1000) {
+                structuralBadge = <span class="status-badge" style="background-color: var(--accent-green); color: var(--bg-main);">Eco Champion</span>;
+            } else if (userSavings > 0) {
+                structuralBadge = <span class="status-badge" style="background-color: #f59e0b; color: var(--bg-main);">Mitigation Active</span>;
             }
 
-            const rawPetrol = parseFloat(document.getElementById('petrolInput').value) || 0;
-            const rawEbike = parseFloat(document.getElementById('ebikeInput').value) || 0;
-            let descriptiveSummary = "";
+            // Generate smart interactive dynamic contextual summary paragraphs
+            const checkPetrol = document.getElementById('hasPetrol').checked;
+            const checkEbike = document.getElementById('hasEbike').checked;
+            let dynamicParagraph = "";
 
-            if (rawPetrol > 0 && rawEbike > 0) {
-                descriptiveSummary = You use a mixed transit lifestyle! Your petrol vehicle releases carbon out of the exhaust tailpipe, while your electric bike adds about <strong>${hiddenUnitsFromEbike.toFixed(1)} hidden units</strong> to your power line footprint to handle charging.;
-            } else if (rawPetrol > 0) {
-                descriptiveSummary = "Your travel footprint comes entirely from burning petrol fuel.";
-            } else if (rawEbike > 0) {
-                descriptiveSummary = "Your transit footprint relies completely on the electric power grid.";
+            if (checkPetrol && checkEbike) {
+                dynamicParagraph = "You run a multi-tiered mixed transit profile. Your direct tailpipe emissions trace to your petrol mileage, while your structural e-bike grid charging costs are computed within your utility power grid metrics.";
+            } else if (checkPetrol) {
+                dynamicParagraph = "Your travel footprint relies strictly on petroleum fuels. Shifting simple baseline local travel tasks over to zero-tailpipe methods can aggressively reduce your total pollution.";
+            } else if (checkEbike) {
+                dynamicParagraph = "Excellent job avoiding liquid petroleum fuels! Your local travel profile generates zero tailpipe emissions on the road, creating only minimal indirect load tracking back to the utility power plant.";
             } else {
-                descriptiveSummary = "Your low-travel configuration keeps travel emissions baseline minimal.";
+                dynamicParagraph = "Your transit profile registers near zero! Your baseline environmental metrics are heavily driven by your regular home power configuration footprints.";
             }
 
             document.getElementById('resultsDisplay').innerHTML = `
                 <div class="metric-item">
-                    <span>Electricity & Power Footprint:</span>
-                    <strong>${powerGridEmissions.toFixed(1)} kg CO₂/year</strong>
+                    <span>Home Grid Utilities Impact:</span>
+                    <strong>${(finalElectricityEmissions + (checkEbike ? (parseFloat(document.getElementById('ebikeDistance').value || 0) * 0.01 * 0.5 * 30 * 0.85 * 12) : 0)).toFixed(1)} kg CO₂/yr</strong>
                 </div>
                 <div class="metric-item">
-                    <span>Direct Petrol Tailpipe Footprint:</span>
-                    <strong>${directPetrolEmissions.toFixed(1)} kg CO₂/year</strong>
+                    <span>Direct Petrol Transit Impact:</span>
+                    <strong>${finalTransportationEmissions.toFixed(1)} kg CO₂/yr</strong>
                 </div>
                 
-                <hr style="border-color: #1f2937; margin: 16px 0;">
+                <hr style="border-color: var(--border-color); margin: 16px 0;">
                 
                 <div class="metric-item">
-                    <span>Your Total Starting Footprint:</span>
-                    <strong style="color: #ef4444;">${totalStartingFootprint.toFixed(1)} kg CO₂/year</strong>
+                    <span>Total Base Footprint:</span>
+                    <strong style="color: var(--accent-red);">${overallCalculatedFootprint.toFixed(1)} kg CO₂/yr</strong>
                 </div>
                 <div class="progress-bar-container">
                     <div class="progress-bar baseline" style="width: 100%"></div>
                 </div>
 
                 <div class="metric-item">
-                    <span>Your New Target Footprint:</span>
-                    <strong style="color: #10b981;">${targetFootprint.toFixed(1)} kg CO₂/year</strong>
+                    <span>Optimized Target Footprint:</span>
+                    <strong style="color: var(--accent-green);">${finalTarget.toFixed(1)} kg CO₂/yr</strong>
                 </div>
                 <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: ${fillPercentage}%"></div>
+                    <div class="progress-bar" style="width: ${structuralPercentage}%"></div>
                 </div>
 
                 <div class="metric-item">
-                    <span>Current Status:</span>
-                    ${badgeMarkup}
+                    <span>Performance Tier:</span>
+                    ${structuralBadge}
                 </div>
                 
                 <div class="insight-box">
-                    <strong>💡 Smart Summary:</strong><br>
-                    • ${descriptiveSummary}<br><br>
-                    • Activating your choices below prevents up to <span style="color: #10b981; font-weight: bold;">${selectedReduction} kg of CO₂</span> from entering the atmosphere every year.
+                    <strong>💡 Personalized System Insights:</strong><br>
+                    • ${dynamicParagraph}<br><br>
+                    • Implementing your checked optimization strategies prevents up to <span style="color: var(--accent-green); font-weight: bold;">${userSavings} kg of carbon emissions</span> from entering the atmosphere annually.
                 </div>
             `;
         }
