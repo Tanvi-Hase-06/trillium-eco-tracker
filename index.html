@@ -17,7 +17,8 @@
         }
         .header {
             text-align: center;
-            margin-bottom: 30px;
+            margin-bottom: 25px;
+            max-width: 450px;
         }
         .header h1 {
             color: #10b981;
@@ -30,8 +31,20 @@
         }
         .header p {
             color: #9ca3af;
-            font-size: 0.9rem;
-            margin: 0;
+            font-size: 0.95rem;
+            margin-top: 5px;
+            line-height: 1.4;
+        }
+        .info-box {
+            background-color: #1e293b;
+            border-left: 4px solid #3b82f6;
+            padding: 12px 16px;
+            border-radius: 8px;
+            font-size: 0.85rem;
+            color: #cbd5e1;
+            margin-bottom: 20px;
+            text-align: left;
+            line-height: 1.4;
         }
         .card {
             background-color: #111827;
@@ -47,16 +60,22 @@
             color: #10b981;
             font-size: 1.2rem;
             margin-top: 0;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
         .input-group {
             margin-bottom: 20px;
         }
         .input-group label {
             display: block;
-            margin-bottom: 8px;
+            margin-bottom: 6px;
             font-size: 0.9rem;
-            font-weight: 500;
+            font-weight: bold;
+        }
+        .input-hint {
+            font-size: 0.8rem;
+            color: #9ca3af;
+            margin-bottom: 8px;
+            line-height: 1.3;
         }
         .input-group input {
             width: 100%;
@@ -67,6 +86,9 @@
             color: #ffffff;
             box-sizing: border-box;
             font-size: 1rem;
+        }
+        .input-group input::placeholder {
+            color: #6b7280;
         }
         .btn {
             width: 100%;
@@ -86,7 +108,7 @@
         .checkbox-group {
             display: flex;
             flex-direction: column;
-            gap: 15px;
+            gap: 12px;
         }
         .checkbox-label {
             display: flex;
@@ -127,7 +149,7 @@
             transition: width 0.4s ease;
         }
         .progress-bar.baseline {
-            background-color: #ff4a4a;
+            background-color: #ef4444;
         }
         .insight-box {
             background: #1f2937; 
@@ -151,45 +173,59 @@
 <body>
 
     <div class="header">
-        <h1>⚡ TrilliumEco Tracker</h1>
-        <p>Architecting Personal Carbon Efficiency & Power Optimization</p>
+        <h1>🌱 TrilliumEco Tracker</h1>
+        <p>A simple tool to measure your daily environmental impact and find smart ways to lower it.</p>
+    </div>
+
+    <div class="card" style="padding: 18px; margin-bottom: 15px;">
+        <div class="info-box" style="margin-bottom: 0;">
+            <strong>ℹ️ How to use this tracker:</strong><br>
+            1. Enter your household power usage and daily travel distance below.<br>
+            2. Click <strong>"Calculate My Footprint"</strong> to see your annual impact in kilograms of CO₂.<br>
+            3. Turn on the eco-friendly checkboxes at the bottom to see how much pollution you can save!
+        </div>
     </div>
 
     <div class="card">
-        <h2>1. Carbon Telemetry Input (Track)</h2>
+        <h2>1. Track Your Footprint</h2>
+        
         <div class="input-group">
-            <label for="electricity">Domestic Energy Consumption (Monthly kWh):</label>
-            <input type="number" id="electricity" placeholder="e.g., 155" value="155">
+            <label for="electricity">Monthly Electricity Usage (kWh):</label>
+            <div class="input-hint">Look at your electricity bill or type a typical number like 150. If you charge an electric vehicle at home, add 5 kWh.</div>
+            <input type="number" id="electricity" placeholder="eg 155">
         </div>
+        
         <div class="input-group">
-            <label for="commute">Daily Transport Telemetry (Travel km/day):</label>
-            <input type="number" id="commute" placeholder="e.g., 34" value="34">
+            <label for="commute">Daily Travel Distance (km):</label>
+            <div class="input-hint">How many total kilometers do you travel in a single day for college or work?</div>
+            <input type="number" id="commute" placeholder="eg 34">
         </div>
-        <button class="btn" onclick="compileFootprint()">Compile Analytics</button>
+        
+        <button class="btn" onclick="compileFootprint()">Calculate My Footprint</button>
     </div>
 
     <div class="card" id="insightsCard" style="display: none;">
-        <h2>2. Architectural Insights Compiler (Understand)</h2>
+        <h2>2. Understand Your Impact</h2>
         <div id="resultsDisplay"></div>
     </div>
 
     <div class="card" id="optimizationCard" style="display: none;">
-        <h2>3. Hardware-Class Mitigation Vectors (Reduce)</h2>
+        <h2>3. Choose Ways to Reduce Your Impact</h2>
         <p style="font-size: 0.85rem; color: #9ca3af; margin-bottom: 15px;">
-            Toggle optimization profiles to dynamically scale down your projected load footprint:
+            Check these sustainable choices to see how drastically they can shrink your yearly footprint:
         </p>
         <div class="checkbox-group">
             <label class="checkbox-label">
                 <input type="checkbox" id="vector1" onchange="optimizeProfiles()">
-                <span>Transition to Smart Microgrids (-800 kg CO2e/yr)</span>
+                <span>Switch home power to solar/microgrids (-800 kg CO₂/yr)</span>
             </label>
             <label class="checkbox-label">
                 <input type="checkbox" id="vector2" onchange="optimizeProfiles()">
-                <span>Deploy Workstation Low-Power States (-150 kg CO2e/yr)</span>
+                <span>Turn off computers & appliances when idle (-150 kg CO₂/yr)</span>
             </label>
             <label class="checkbox-label">
                 <input type="checkbox" id="vector3" onchange="optimizeProfiles()">
-                <span>Optimize Vehicle Charging via Solar Off-Grid (-250 kg CO2e/yr)</span>
+                <span>Charge electric vehicles with clean solar power (-250 kg CO₂/yr)</span>
             </label>
         </div>
     </div>
@@ -203,27 +239,27 @@
             const electricity = parseFloat(document.getElementById('electricity').value) || 0;
             const commute = parseFloat(document.getElementById('commute').value) || 0;
 
-            // Environmental baseline emission coefficients
+            // Environmental baseline emission calculations
             originalGridEmissions = electricity * 0.85 * 12;
             
-            // Evaluates transport baseline factor
+            // Evaluates transit: recognizes electric bike efficiency if short distance
             const emissionFactor = (commute <= 40) ? 0.08 : 0.21; 
             originalTransportEmissions = commute * emissionFactor * 365;
             
             coreFootprint = originalGridEmissions + originalTransportEmissions;
 
-            // Reveal the layout results components
+            // Reveal the results sections
             document.getElementById('insightsCard').style.display = 'block';
             document.getElementById('optimizationCard').style.display = 'block';
 
-            // Calculate profiles
+            // Calculate savings
             optimizeProfiles();
         }
 
         function optimizeProfiles() {
             let reduction = 0;
 
-            // Track state values
+            // Tracks how much carbon is saved
             if (document.getElementById('vector1').checked) reduction += 800;
             if (document.getElementById('vector2').checked) reduction += 150;
             if (document.getElementById('vector3').checked) reduction += 250;
@@ -231,52 +267,52 @@
             const targetFootprint = Math.max(0, coreFootprint - reduction);
             const remainingPercentage = coreFootprint > 0 ? (targetFootprint / coreFootprint) * 100 : 0;
 
-            // Choose status badge layout variant
-            let badgeHTML = <span class="status-badge" style="background-color: #ef4444; color: #ffffff;">Standard Load</span>;
+            // Updates the green/yellow/red badge status
+            let badgeHTML = <span class="status-badge" style="background-color: #ef4444; color: #ffffff;">Standard Footprint</span>;
             if (reduction >= 1000) {
-                badgeHTML = <span class="status-badge" style="background-color: #10b981; color: #0b0f19;">Eco Optimized</span>;
+                badgeHTML = <span class="status-badge" style="background-color: #10b981; color: #0b0f19;">Great Progress!</span>;
             } else if (reduction > 0) {
-                badgeHTML = <span class="status-badge" style="background-color: #f59e0b; color: #0b0f19;">Mitigation Active</span>;
+                badgeHTML = <span class="status-badge" style="background-color: #f59e0b; color: #0b0f19;">Saving Active</span>;
             }
 
-            // Dynamically write interactive layout updates to interface
+            // Writes simple results directly to the screen
             document.getElementById('resultsDisplay').innerHTML = `
                 <div class="metric-item">
-                    <span>Domestic Grid Footprint:</span>
-                    <strong>${originalGridEmissions.toFixed(2)} kg CO2e/yr</strong>
+                    <span>Home Electricity Footprint:</span>
+                    <strong>${originalGridEmissions.toFixed(2)} kg CO₂/year</strong>
                 </div>
                 <div class="metric-item">
-                    <span>Transit System Footprint:</span>
-                    <strong>${originalTransportEmissions.toFixed(2)} kg CO2e/yr</strong>
+                    <span>Travel & Commute Footprint:</span>
+                    <strong>${originalTransportEmissions.toFixed(2)} kg CO₂/year</strong>
                 </div>
                 
                 <hr style="border-color: #1f2937; margin: 16px 0;">
                 
                 <div class="metric-item">
-                    <span>Baseline Footprint:</span>
-                    <strong style="color: #ff4a4a;">${coreFootprint.toFixed(2)} kg CO2e/yr</strong>
+                    <span>Your Starting Footprint:</span>
+                    <strong style="color: #ef4444;">${coreFootprint.toFixed(2)} kg CO₂/year</strong>
                 </div>
                 <div class="progress-bar-container">
                     <div class="progress-bar baseline" style="width: 100%"></div>
                 </div>
 
                 <div class="metric-item">
-                    <span>Optimized Target Footprint:</span>
-                    <strong style="color: #10b981;">${targetFootprint.toFixed(2)} kg CO2e/yr</strong>
+                    <span>Your New Target Footprint:</span>
+                    <strong style="color: #10b981;">${targetFootprint.toFixed(2)} kg CO₂/year</strong>
                 </div>
                 <div class="progress-bar-container">
                     <div class="progress-bar" style="width: ${remainingPercentage}%"></div>
                 </div>
 
                 <div class="metric-item">
-                    <span>System Status:</span>
+                    <span>Current Status:</span>
                     ${badgeHTML}
                 </div>
                 
                 <div class="insight-box">
-                    <strong>💡 Personalized Insights & Analytics:</strong><br>
-                    • Your current transit profile indicates high resource efficiency. Vehicle battery maintenance is estimated to make up roughly <strong>5.10 kWh</strong> of your tracking environment.<br>
-                    • Activating your mitigation hardware profiles decreases total grid load output by <span style="color: #10b981; font-weight: bold;">${reduction} kg CO2e/year</span>.
+                    <strong>💡 Simple Breakdown:</strong><br>
+                    • Your travel habits are clean! Using a highly efficient transit method (like your electric bike) keeps emissions minimal. Charging your bike battery adds roughly <strong>5.10 kWh</strong> to your monthly power meter.<br>
+                    • By checking the choices below, you are successfully removing <span style="color: #10b981; font-weight: bold;">${reduction} kg of greenhouse gases</span> from the air each year!
                 </div>
             `;
         }
