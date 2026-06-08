@@ -51,6 +51,33 @@
             margin-top: 0;
             margin-bottom: 15px;
         }
+        /* Style for the Step-by-Step Guide Box */
+        .guide-steps {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+        .guide-steps li {
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+            margin-bottom: 12px;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            color: #cbd5e1;
+        }
+        .step-number {
+            background-color: #10b981;
+            color: #0b0f19;
+            font-weight: bold;
+            border-radius: 50%;
+            min-width: 22px;
+            height: 22px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+        }
         .input-group {
             margin-bottom: 20px;
         }
@@ -76,9 +103,6 @@
             color: #ffffff;
             box-sizing: border-box;
             font-size: 1rem;
-        }
-        .input-group input::placeholder {
-            color: #6b7280;
         }
         .btn {
             width: 100%;
@@ -164,7 +188,25 @@
 
     <div class="header">
         <h1>🌱 TrilliumEco Tracker</h1>
-        <p>Calculate your personal carbon footprint easily. Fill only what you use!</p>
+        <p>Your simplified, interactive environmental footprint companion.</p>
+    </div>
+
+    <div class="card" style="border-color: #3b82f6;">
+        <h2 style="color: #3b82f6; display: flex; align-items: center; gap: 8px;">📖 How to Use This Tracker</h2>
+        <ul class="guide-steps">
+            <li>
+                <div class="step-number">1</div>
+                <div>Find the total <strong>"Units Consumed"</strong> or <strong>"kWh"</strong> on your current monthly electricity statement and type it in.</div>
+            </li>
+            <li>
+                <div class="step-number">2</div>
+                <div>Enter your average daily travel distance in kilometers. Fill only what matches your lifestyle, and feel free to leave the rest at 0!</div>
+            </li>
+            <li>
+                <div class="step-number">3</div>
+                <div>Click the <strong>"Calculate My Footprint"</strong> button to compile your live reporting chart instantly.</div>
+            </li>
+        </ul>
     </div>
 
     <div class="card">
@@ -172,22 +214,21 @@
         
         <div class="input-group">
             <label for="electricity">Monthly Electricity Bill Units:</label>
-            <div class="input-hint">Look on your bill for <strong>"Units Consumed"</strong> or <strong>"kWh"</strong> and type it here.</div>
+            <div class="input-hint">Just copy the raw units or kWh number direct from your statement.</div>
             <input type="number" id="electricity" placeholder="eg 150">
         </div>
         
         <hr style="border-color: #1f2937; margin: 20px 0;">
-        <p style="font-size: 0.85rem; color: #9ca3af; margin-top: -10px; margin-bottom: 15px;">💡 For travel, only enter km for the vehicles you actually ride. Leave others as 0.</p>
 
         <div class="input-group">
             <label for="petrolCommute">Daily Petrol Vehicle Travel (km):</label>
-            <div class="input-hint">How many kilometers do you drive a petrol bike/car on a normal day? (Put 0 if none)</div>
+            <div class="input-hint">How many kilometers do you drive a petrol bike or car on a normal day?</div>
             <input type="number" id="petrolCommute" placeholder="eg 20" value="0">
         </div>
 
         <div class="input-group">
             <label for="ebikeCommute">Daily Electric Bike Travel (km):</label>
-            <div class="input-hint">How many kilometers do you ride an electric bike/scooter on a normal day? (Put 0 if none)</div>
+            <div class="input-hint">How many kilometers do you ride an electric scooter or bike on a normal day?</div>
             <input type="number" id="ebikeCommute" placeholder="eg 34" value="0">
         </div>
         
@@ -224,33 +265,30 @@
         let coreFootprint = 0;
         let originalGridEmissions = 0;
         let originalTransportEmissions = 0;
-        let petrolEmissions = 0;
-        let ebikeGridEmissions = 0;
+        let calculatedEbikeUnits = 0;
 
         function compileFootprint() {
             const billUnits = parseFloat(document.getElementById('electricity').value) || 0;
             const petrolKm = parseFloat(document.getElementById('petrolCommute').value) || 0;
             const ebikeKm = parseFloat(document.getElementById('ebikeCommute').value) || 0;
 
-            // 1. Calculate emissions from the household bill itself
+            // Base electricity calculations
             const baseGridEmissions = billUnits * 0.85 * 12;
             
-            // 2. Petrol vehicle: emissions are created directly by burning fuel on the road
-            petrolEmissions = petrolKm * 0.21 * 365;
+            // Petrol calculations (direct exhaust tailpipe emissions)
+            const petrolEmissions = petrolKm * 0.21 * 365;
             
-            // 3. Electric vehicle: emissions are created at the power plant when charging from the wall
-            // 1km uses 1% battery capacity. A standard 100% full e-bike battery holds ~0.5 kWh.
+            // Electric bike charging overhead calculations
             const dailyEbikeKwh = ebikeKm * 0.01 * 0.5;
-            const monthlyEbikeUnits = dailyEbikeKwh * 30;
-            ebikeGridEmissions = monthlyEbikeUnits * 0.85 * 12;
+            calculatedEbikeUnits = dailyEbikeKwh * 30;
+            const ebikeGridEmissions = calculatedEbikeUnits * 0.85 * 12;
 
-            // Group them cleanly into visual categories
+            // Bind values to layout variables
             originalGridEmissions = baseGridEmissions + ebikeGridEmissions;
             originalTransportEmissions = petrolEmissions;
-            
             coreFootprint = baseGridEmissions + ebikeGridEmissions + petrolEmissions;
 
-            // Show results layout
+            // Make the hidden result cards appear seamlessly
             document.getElementById('insightsCard').style.display = 'block';
             document.getElementById('optimizationCard').style.display = 'block';
 
@@ -274,19 +312,18 @@
                 badgeHTML = <span class="status-badge" style="background-color: #f59e0b; color: #0b0f19;">Saving Active</span>;
             }
 
-            // Generate smart dynamic insight messages based on what the user inputted
             const petrolKm = parseFloat(document.getElementById('petrolCommute').value) || 0;
             const ebikeKm = parseFloat(document.getElementById('ebikeCommute').value) || 0;
             let customizedText = "";
 
-            if (petrolKm > 0 && ebikeKm === 0) {
-                customizedText = "Your travel footprint comes entirely from burning petrol fuel. Consider shifting short tasks to walking to save fuel costs!";
-            } else if (ebikeKm > 0 && petrolKm === 0) {
-                customizedText = "Fantastic! By riding an electric bike instead of burning petrol, you keep direct vehicle pollution at zero. Your only minor impact comes from charging it via the home power lines.";
-            } else if (petrolKm > 0 && ebikeKm > 0) {
-                customizedText = "You use a mixed transit lifestyle! Your petrol vehicle releases carbon out of the exhaust pipe, while your clean electric bike splits its energy draw onto your home power system.";
+            if (petrolKm > 0 && ebikeKm > 0) {
+                customizedText = You use a mixed transit lifestyle! Your petrol vehicle releases carbon out of the exhaust tailpipe, while your electric bike adds about <strong>${calculatedEbikeUnits.toFixed(1)} hidden units</strong> to your power line footprint to handle charging.;
+            } else if (petrolKm > 0) {
+                customizedText = "Your travel footprint comes entirely from burning petrol fuel.";
+            } else if (ebikeKm > 0) {
+                customizedText = "Your transit footprint relies completely on the electric power grid.";
             } else {
-                customizedText = "Your low-travel profile keeps your personal transportation impact close to zero!";
+                customizedText = "Your low-travel configuration keeps travel emissions baseline minimal.";
             }
 
             document.getElementById('resultsDisplay').innerHTML = `
