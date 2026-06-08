@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+[2:18 am, 9/6/2026] Tanvi Hase: <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -8,49 +8,70 @@
         :root { --bg-main: #0b0f19; --bg-card: #111827; --accent-green: #10b981; --accent-blue: #3b82f6; --text-primary: #ffffff; --text-muted: #9ca3af; }
         body { background-color: var(--bg-main); color: var(--text-primary); font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
         .card { background-color: var(--bg-card); border: 1px solid #374151; border-radius: 12px; padding: 24px; width: 100%; max-width: 550px; margin-bottom: 20px; }
-        h1 { color: var(--accent-green); text-align: center; }
-        h2 { color: var(--accent-green); font-size: 1.1rem; margin-bottom: 15px; }
-        .guide-box { border: 1px solid var(--accent-blue); padding: 15px; border-radius: 8px; font-size: 0.9rem; }
-        input { width: 100%; padding: 10px; margin: 5px 0 15px 0; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: white; box-sizing: border-box; }
-        button { width: 100%; padding: 15px; background: var(--accent-green); border: none; border-radius: 8px; cursor: pointer; color: #0b0f19; font-weight: bold; }
-        .metric-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #374151; font-size: 0.9rem; }
-        .action-card { background: #1f2937; border: 1px solid #374151; padding: 12px; border-radius: 8px; margin: 8px 0; display: flex; align-items: center; cursor: pointer; }
-        progress { width: 100%; height: 15px; margin-top: 10px; }
+        h1 { color: var(--accent-green); text-align: ce…
+[2:22 am, 9/6/2026] Tanvi Hase: <!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TrilliumEco Carbon Tracker</title>
+    <style>
+        :root { --bg-main: #0b0f19; --bg-card: #111827; --accent-green: #10b981; --accent-blue: #3b82f6; --text-primary: #ffffff; --text-muted: #9ca3af; }
+        body { background-color: var(--bg-main); color: var(--text-primary); font-family: 'Segoe UI', sans-serif; padding: 20px; display: flex; flex-direction: column; align-items: center; }
+        .card { background-color: var(--bg-card); border: 1px solid #374151; border-radius: 12px; padding: 24px; width: 100%; max-width: 550px; margin-bottom: 20px; }
+        h1 { color: var(--accent-green); text-align: center; margin-bottom: 25px; }
+        h2 { color: var(--accent-green); font-size: 1.2rem; margin-bottom: 15px; }
+        .guide-box { border: 1px solid var(--accent-blue); padding: 15px; border-radius: 8px; margin-bottom: 20px; font-size: 0.9rem; }
+        input { width: 100%; padding: 12px; margin: 8px 0; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: white; box-sizing: border-box; }
+        button { width: 100%; padding: 15px; background: var(--accent-green); border: none; border-radius: 8px; cursor: pointer; color: #0b0f19; font-weight: bold; margin-top: 10px; }
+        .metric-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #374151; font-size: 0.95rem; }
+        .mitigation-box { background: #1f2937; padding: 15px; border-radius: 8px; margin: 15px 0; border-left: 4px solid var(--accent-green); }
+        .action-card { background: #1f2937; border: 1px solid #374151; padding: 15px; border-radius: 8px; margin: 10px 0; display: flex; align-items: start; gap: 10px; cursor: pointer; }
+        progress { width: 100%; height: 20px; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <h1>🌱 TrilliumEco Carbon Tracker</h1>
 
+    <!-- Full Guide Section -->
     <div class="card guide-box">
-        <h2>💡 Understanding Carbon Impact</h2>
-        <p>Food production accounts for significant global emissions. Meat and dairy have higher carbon footprints due to land use and methane. By tracking your weekly frequency, we estimate your annual indirect <strong>CO₂ emissions</strong> more accurately.</p>
+        <h2>How to Use This Guide</h2>
+        <p><strong>1. Electricity Data:</strong> Find "Units Consumed" or "kWh" on your bill and enter it below.</p>
+        <p><strong>2. Travel Distances:</strong> Enter average daily travel in km. Use 0 for unused types.</p>
+        <p><strong>3. Interactive Actions Guide:</strong> Click "Compile Analytics", then select options to decrease your target.</p>
     </div>
 
     <div class="card">
         <h2>1. Carbon Telemetry Input</h2>
         <input type="number" id="kwh" placeholder="Monthly Home Energy (kWh)">
         <input type="number" id="petrol" placeholder="Daily Petrol Commute (km)">
-        
-        <label>Meat consumption (days/week):</label>
+        <label style="font-size: 0.85rem;">Meat consumption (days/week):</label>
         <input type="number" id="meatFreq" min="0" max="7" value="0">
-        
-        <label>Dairy consumption (days/week):</label>
+        <label style="font-size: 0.85rem;">Dairy consumption (days/week):</label>
         <input type="number" id="dairyFreq" min="0" max="7" value="0">
-        
         <input type="number" id="goalInput" placeholder="Annual Reduction Goal (kg CO₂)">
         <button id="calcBtn">Compile Analytics</button>
     </div>
 
+    <!-- Section 2 & 3 -->
     <div class="card" id="resultsCard" style="display: none;">
         <h2>2. Compiled Footprint Metrics</h2>
-        <div class="metric-row"><span>Gross Footprint:</span> <span id="lblGross">0 kg/yr</span></div>
-        <div class="metric-row"><span>Target After Mitigation:</span> <span id="lblTarget">0 kg/yr</span></div>
-        <progress id="barTarget" value="0" max="100"></progress>
+        <div class="metric-row"><span>Gross Initial Footprint:</span> <span id="lblGross">0 kg/yr</span></div>
+        <progress id="barGross" value="100" max="100" style="accent-color: #ff6b6b;"></progress>
         
-        <h2>3. Carbon Abatement Options</h2>
-        <label class="action-card"><input type="checkbox" class="reducer" id="chkSolar"> Solar PV Transition (-800kg)</label>
-        <label class="action-card"><input type="checkbox" class="reducer" id="chkVampire"> Vampire Load Isolation (-150kg)</label>
+        <div class="metric-row" style="margin-top: 15px;"><span>Modeled Abatement Target:</span> <span id="lblTarget">0 kg/yr</span></div>
+        <progress id="barTarget" value="0" max="100" style="accent-color: var(--accent-green);"></progress>
+
+        <div class="mitigation-box">
+            <p>💡 <strong>Mitigation Analytics:</strong></p>
+            <p id="mitigationText">Selected reduction frameworks prevent 0 kg of atmospheric CO₂ loading annually.</p>
+        </div>
+        
+        <h2>3. Carbon Abatement Options (Reduce)</h2>
+        <label class="action-card"><input type="checkbox" id="chkSolar" class="reducer"> <div><strong>Transition local residence grid to complete Solar PV (-800kg)</strong></div></label>
+        <label class="action-card"><input type="checkbox" id="chkVampire" class="reducer"> <div><strong>Implement baseline vampire load isolation protocols (-150kg)</strong></div></label>
+        <label class="action-card"><input type="checkbox" id="chkEvSolar" class="reducer"> <div><strong>Configure EV charge cycles exclusively via offset solar assets (-250kg)</strong></div></label>
     </div>
 
     <script>
@@ -60,20 +81,22 @@
             var meat = parseFloat(document.getElementById('meatFreq').value) || 0;
             var dairy = parseFloat(document.getElementById('dairyFreq').value) || 0;
 
-            // Calculation logic: Energy + Travel + (Weighted Diet)
+            // Updated accurate calculation
             var gross = (kwh * 0.85 * 12) + (petrol * 0.21 * 365) + (meat * 120) + (dairy * 40);
-            
             var saved = 0;
             if(document.getElementById('chkSolar').checked) saved += 800;
             if(document.getElementById('chkVampire').checked) saved += 150;
+            if(document.getElementById('chkEvSolar').checked) saved += 250;
 
             var target = Math.max(0, gross - saved);
             
             document.getElementById('resultsCard').style.display = 'block';
             document.getElementById('lblGross').innerText = gross.toFixed(1) + " kg/yr";
             document.getElementById('lblTarget').innerText = target.toFixed(1) + " kg/yr";
+            document.getElementById('mitigationText').innerText = "Selected reduction frameworks prevent " + saved + " kg of atmospheric CO₂ loading annually.";
             document.getElementById('barTarget').value = gross > 0 ? (target / gross) * 100 : 0;
         }
+
         document.getElementById('calcBtn').addEventListener('click', calculate);
         document.querySelectorAll('.reducer').forEach(el => el.addEventListener('change', calculate));
     </script>
