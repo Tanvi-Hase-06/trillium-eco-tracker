@@ -51,7 +51,6 @@
             margin-top: 0;
             margin-bottom: 15px;
         }
-        /* Style for the Step-by-Step Guide Box */
         .guide-steps {
             list-style: none;
             padding: 0;
@@ -268,6 +267,7 @@
         let calculatedEbikeUnits = 0;
 
         function compileFootprint() {
+            // FIXED: Fetches 'electricity' matching the updated input ID
             const billUnits = parseFloat(document.getElementById('electricity').value) || 0;
             const petrolKm = parseFloat(document.getElementById('petrolCommute').value) || 0;
             const ebikeKm = parseFloat(document.getElementById('ebikeCommute').value) || 0;
