@@ -140,18 +140,19 @@
         .checkbox-group {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
+            margin-bottom: 20px;
         }
 
         .checkbox-label {
             display: flex;
             align-items: center;
             background-color: var(--bg-input);
-            padding: 14px;
+            padding: 12px;
             border-radius: 8px;
             border: 1px solid var(--border-color);
             cursor: pointer;
-            font-size: 0.9rem;
+            font-size: 0.88rem;
             transition: border-color 0.2s ease;
         }
 
@@ -167,43 +168,67 @@
             cursor: pointer;
         }
 
-        .metric-item {
-            margin: 12px 0;
-            font-size: 0.95rem;
+        .metric-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
+            font-size: 0.9rem;
+            margin: 8px 0;
+        }
+
+        .total-box {
+            background-color: rgba(239, 68, 68, 0.1);
+            border: 1px dashed var(--accent-red);
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 15px;
+        }
+
+        .target-box {
+            background-color: rgba(16, 185, 129, 0.1);
+            border: 1px dashed var(--accent-green);
+            padding: 10px;
+            border-radius: 6px;
+            margin-top: 10px;
         }
 
         .progress-bar-container {
             background-color: var(--bg-input);
-            border-radius: 6px;
-            height: 12px;
+            border-radius: 4px;
+            height: 8px;
             width: 100%;
             margin-top: 6px;
-            margin-bottom: 16px;
             overflow: hidden;
         }
 
         .progress-bar {
             background-color: var(--accent-green);
             height: 100%;
-            width: 0%;
-            transition: width 0.4s ease;
+            width: 100%;
+            transition: width 0.3s ease;
         }
 
         .progress-bar.baseline {
             background-color: var(--accent-red);
         }
 
-        .insight-box {
-            background: var(--bg-input); 
-            padding: 14px; 
-            border-radius: 8px; 
-            border-left: 4px solid var(--accent-green); 
-            margin-top: 15px; 
-            font-size: 0.9rem; 
-            line-height: 1.5;
+        .summary-alert {
+            background: #1f2937;
+            padding: 12px;
+            border-radius: 8px;
+            border-left: 4px solid var(--accent-blue);
+            text-align: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            line-height: 1.4;
+        }
+        
+        .sub-guide {
+            margin-top: 8px;
+            padding-left: 15px;
+            font-size: 0.85rem;
+            color: #9ca3af;
+            border-left: 2px solid #4b5563;
         }
     </style>
 </head>
@@ -211,159 +236,172 @@
 
     <div class="header">
         <h1>🌱 TrilliumEco Tracker</h1>
-        <p>Architecting Personal Carbon Efficiency & Power Optimization</p>
+        <p>Personal Carbon Footprint & Reduction Simulator</p>
     </div>
 
     <div class="card" style="border-color: var(--accent-blue);">
-        <h2 style="color: var(--accent-blue); margin-bottom: 15px;">📖 Dashboard Instructions</h2>
+        <h2 style="color: var(--accent-blue);">📖 How to Use This Guide</h2>
         <ul class="guide-steps">
             <li>
                 <div class="step-number">1</div>
-                <div><strong>Electricity Meter Data:</strong> Find the exact raw electricity usage listed on your monthly statement under <strong>"Units Consumed"</strong> or <strong>"kWh"</strong> and type it in.</div>
+                <div><strong>Electricity Data:</strong> Find the exact number listed as <strong>"Units Consumed"</strong> or <strong>"kWh"</strong> on your monthly utility bill and enter it below.</div>
             </li>
             <li>
                 <div class="step-number">2</div>
-                <div><strong>Transit Diagnostics:</strong> Provide your average daily distance for petrol vehicles and electric bikes. Enter <strong>0</strong> if you don't use one of them.</div>
+                <div><strong>Travel Distances:</strong> Enter your average daily travel in kilometers. Use <strong>0</strong> for vehicle types you do not ride.</div>
             </li>
             <li>
                 <div class="step-number">3</div>
-                <div><strong>Interactive Simulation:</strong> Click <strong>"Compile Analytics"</strong> to see your environmental footprint. Then, use the checkboxes in Section 3 to watch your real-time carbon reduction shift live!</div>
+                <div><strong>Interactive Actions Guide:</strong> Click <strong>"Calculate My Footprint"</strong>, then select options to instantly decrease your carbon output target. Here is what they mean:</div>
+                <div class="sub-guide">
+                    • <strong>Solar PV:</strong> Switch from coal power grid to clean rooftop solar panels.<br>
+                    • <strong>Vampire Loads:</strong> Unplug laptop/TV chargers to stop secret standby power waste.<br>
+                    • <strong>Offset Solar Assets:</strong> Charge your e-bike exclusively with 100% green solar energy.
+                </div>
             </li>
         </ul>
     </div>
 
     <div class="card">
-        <h2>1. Carbon Telemetry Input (Track)</h2>
+        <h2>1. Enter Your Everyday Numbers</h2>
         
         <div class="input-group">
             <label for="monthlyKwh">Domestic Energy Consumption (Monthly kWh):</label>
-            <div class="input-hint">Enter the total units/kWh from your electricity bill statement.</div>
-            <input type="number" id="monthlyKwh" placeholder="e.g., 150" value="0" min="0">
+            <div class="input-hint">Just copy the raw units or kWh number direct from your statement.</div>
+            <input type="number" id="monthlyKwh" value="0" min="0">
         </div>
         
         <hr style="border-color: var(--border-color); margin: 20px 0;">
 
         <div class="input-group">
             <label for="petrolKm">Daily Petrol Vehicle Travel (km):</label>
-            <div class="input-hint">Average kilometers driven on a gas/petrol bike or car per day.</div>
-            <input type="number" id="petrolKm" placeholder="e.g., 30" value="0" min="0">
+            <div class="input-hint">How many kilometers do you drive a petrol bike or car on a normal day?</div>
+            <input type="number" id="petrolKm" value="0" min="0">
         </div>
 
         <div class="input-group">
             <label for="ebikeKm">Daily Electric Bike Travel (km):</label>
-            <div class="input-hint">Average kilometers driven on an electric bike or scooter per day.</div>
-            <input type="number" id="ebikeKm" placeholder="e.g., 34" value="0" min="0">
+            <div class="input-hint">How many kilometers do you ride an electric scooter or bike on a normal day?</div>
+            <input type="number" id="ebikeKm" value="0" min="0">
         </div>
         
-        <button class="btn" onclick="processTelemetry()">Compile Analytics</button>
+        <button class="btn" onclick="calculateFootprint()">Calculate My Footprint</button>
     </div>
 
-    <div class="card" id="analyticsCard" style="display: none;">
-        <h2>2. Compiled Footprint Metrics</h2>
-        <div id="analyticsDisplay"></div>
-    </div>
+    <div class="card" id="resultsCard" style="display: none;">
+        <h2>2. Your Footprint & Live Reduction Options</h2>
+        
+        <div class="metric-row">
+            <span>💡 Grid Power Impact:</span>
+            <span id="lblPower">0.0 kg CO₂/yr</span>
+        </div>
+        <div class="metric-row">
+            <span>🚗 Petrol Travel Impact:</span>
+            <span id="lblPetrol">0.0 kg CO₂/yr</span>
+        </div>
+        <div class="metric-row">
+            <span>⚡ Electric Bike Impact:</span>
+            <span id="lblEbike">0.0 kg CO₂/yr</span>
+        </div>
 
-    <div class="card" id="remediationCard" style="display: none;">
-        <h2>3. Carbon Abatement Options (Reduce)</h2>
-        <p style="font-size: 0.85rem; color: var(--text-muted); margin-bottom: 15px;">
-            Select one or more optimization strategies below to model your potential footprint reduction in real time:
+        <div class="total-box">
+            <div class="metric-row" style="margin: 0;">
+                <span style="font-weight: bold; color: var(--accent-red);">Gross Initial Footprint:</span>
+                <span id="lblGrossTotal" style="font-weight: bold; color: var(--accent-red);">0.0 kg CO₂/yr</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar baseline"></div>
+            </div>
+        </div>
+
+        <p style="font-size: 0.85rem; color: var(--text-muted); margin: 20px 0 10px 0; font-weight: bold;">
+            Select dynamic actions below to decrease your footprint target:
         </p>
+        
         <div class="checkbox-group">
             <label class="checkbox-label">
-                <input type="checkbox" id="mitigateSolar" onchange="modelAbatements()">
-                <span>Transition local residence grid to complete Solar PV (-800 kg CO₂/yr)</span>
+                <input type="checkbox" id="chkSolar" onchange="updateLiveAbatement()">
+                <span>Transition local residence grid to complete Solar PV (-800 kg/yr)</span>
             </label>
             <label class="checkbox-label">
-                <input type="checkbox" id="mitigateAppliances" onchange="modelAbatements()">
-                <span>Implement baseline vampire load isolation protocols (-150 kg CO₂/yr)</span>
+                <input type="checkbox" id="chkAppliances" onchange="updateLiveAbatement()">
+                <span>Implement baseline vampire load isolation protocols (-150 kg/yr)</span>
             </label>
             <label class="checkbox-label">
-                <input type="checkbox" id="mitigateCleanCharge" onchange="modelAbatements()">
-                <span>Configure EV charge cycles exclusively via offset solar assets (-250 kg CO₂/yr)</span>
+                <input type="checkbox" id="chkCleanCharge" onchange="updateLiveAbatement()">
+                <span>Configure EV charge cycles exclusively via offset solar assets (-250 kg/yr)</span>
             </label>
+        </div>
+
+        <div class="target-box">
+            <div class="metric-row" style="margin: 0;">
+                <span style="font-weight: bold; color: var(--accent-green);">Your New Modeled Target:</span>
+                <span id="lblTargetTotal" style="font-weight: bold; color: var(--accent-green);">0.0 kg CO₂/yr</span>
+            </div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="targetBar" style="width: 100%;"></div>
+            </div>
+        </div>
+
+        <div class="metric-row" style="margin-top: 15px; margin-bottom: 15px;">
+            <span>📉 Total Saved Amount:</span>
+            <span id="lblTotalAbated" style="color: var(--accent-blue); font-weight: bold; font-size: 1.05rem;">0 kg CO₂/yr</span>
+        </div>
+
+        <div class="summary-alert" id="summaryFeedback">
+            Select checkboxes to start saving carbon emissions!
         </div>
     </div>
 
     <script>
-        // Data models
-        let netBaseFootprint = 0;
+        let grossInitialFootprint = 0;
         let powerEmissions = 0;
-        let combustionTransitEmissions = 0;
-        let electricTransitEmissions = 0;
+        let petrolEmissions = 0;
+        let ebikeEmissions = 0;
 
-        function processTelemetry() {
-            try {
-                // Map Element IDs safely
-                const kwhInput = parseFloat(document.getElementById('monthlyKwh').value) || 0;
-                const petrolKmInput = parseFloat(document.getElementById('petrolKm').value) || 0;
-                const ebikeKmInput = parseFloat(document.getElementById('ebikeKm').value) || 0;
+        function calculateFootprint() {
+            const kwh = parseFloat(document.getElementById('monthlyKwh').value) || 0;
+            const petrolKm = parseFloat(document.getElementById('petrolKm').value) || 0;
+            const ebikeKm = parseFloat(document.getElementById('ebikeKm').value) || 0;
 
-                // Technical environmental formulations
-                powerEmissions = kwhInput * 0.85 * 12;
-                combustionTransitEmissions = petrolKmInput * 0.21 * 365;
-                electricTransitEmissions = ebikeKmInput * 0.01 * 0.5 * 30 * 0.85 * 12;
+            powerEmissions = kwh * 0.85 * 12;
+            petrolEmissions = petrolKm * 0.21 * 365;
+            ebikeEmissions = ebikeKm * 0.01 * 0.5 * 30 * 0.85 * 12;
 
-                netBaseFootprint = powerEmissions + combustionTransitEmissions + electricTransitEmissions;
+            grossInitialFootprint = powerEmissions + petrolEmissions + ebikeEmissions;
 
-                // Make output panels visible
-                document.getElementById('analyticsCard').style.display = 'block';
-                document.getElementById('remediationCard').style.display = 'block';
+            document.getElementById('lblPower').innerText = powerEmissions.toFixed(1) + " kg CO₂/yr";
+            document.getElementById('lblPetrol').innerText = petrolEmissions.toFixed(1) + " kg CO₂/yr";
+            document.getElementById('lblEbike').innerText = ebikeEmissions.toFixed(1) + " kg CO₂/yr";
+            document.getElementById('lblGrossTotal').innerText = grossInitialFootprint.toFixed(1) + " kg CO₂/yr";
 
-                modelAbatements();
-            } catch (exception) {
-                console.error("Telemetry Pipeline Failure:", exception.message);
-            }
+            document.getElementById('resultsCard').style.display = 'block';
+
+            updateLiveAbatement();
         }
 
-        function modelAbatements() {
-            let totalAbated = 0;
+        function updateLiveAbatement() {
+            let totalSaved = 0;
 
-            // Calculate total abated based on checked state
-            if (document.getElementById('mitigateSolar').checked) totalAbated += 800;
-            if (document.getElementById('mitigateAppliances').checked) totalAbated += 150;
-            if (document.getElementById('mitigateCleanCharge').checked) totalAbated += 250;
+            if (document.getElementById('chkSolar').checked) totalSaved += 800;
+            if (document.getElementById('chkAppliances').checked) totalSaved += 150;
+            if (document.getElementById('chkCleanCharge').checked) totalSaved += 250;
 
-            // Make sure target footprint doesn't go below zero
-            const netTargetFootprint = Math.max(0, netBaseFootprint - totalAbated);
-            const dynamicScale = netBaseFootprint > 0 ? (netTargetFootprint / netBaseFootprint) * 100 : 0;
+            const dynamicTarget = Math.max(0, grossInitialFootprint - totalSaved);
+            const barWidthPercentage = grossInitialFootprint > 0 ? (dynamicTarget / grossInitialFootprint) * 100 : 0;
 
-            document.getElementById('analyticsDisplay').innerHTML = `
-                <div class="metric-item">
-                    <span>Grid Power Impact:</span>
-                    <strong>${powerEmissions.toFixed(1)} kg CO₂/yr</strong>
-                </div>
-                <div class="metric-item">
-                    <span>Internal Combustion Impact:</span>
-                    <strong>${combustionTransitEmissions.toFixed(1)} kg CO₂/yr</strong>
-                </div>
-                <div class="metric-item">
-                    <span>EV Grid Infrastructure Impact:</span>
-                    <strong>${electricTransitEmissions.toFixed(1)} kg CO₂/yr</strong>
-                </div>
-                
-                <hr style="border-color: var(--border-color); margin: 16px 0;">
-                
-                <div class="metric-item">
-                    <span>Gross Initial Footprint:</span>
-                    <strong style="color: var(--accent-red);">${netBaseFootprint.toFixed(1)} kg CO₂/yr</strong>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar baseline" style="width: 100%"></div>
-                </div>
+            document.getElementById('lblTargetTotal').innerText = dynamicTarget.toFixed(1) + " kg CO₂/yr";
+            document.getElementById('lblTotalAbated').innerText = totalSaved + " kg CO₂/yr";
+            document.getElementById('targetBar').style.width = barWidthPercentage + "%";
 
-                <div class="metric-item">
-                    <span>Modeled Abatement Target:</span>
-                    <strong style="color: var(--accent-green);">${netTargetFootprint.toFixed(1)} kg CO₂/yr</strong>
-                </div>
-                <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: ${dynamicScale}%"></div>
-                </div>
-                
-                <div class="insight-box">
-                    <strong>💡 Mitigation Analytics:</strong><br>
-                    Selected reduction frameworks prevent <span style="color: var(--accent-green); font-weight: bold;">${totalAbated} kg of atmospheric CO₂</span> loading annually.
-                </div>
-            `;
+            const feedbackBox = document.getElementById('summaryFeedback');
+            if (totalSaved === 0) {
+                feedbackBox.style.borderColor = "var(--accent-blue)";
+                feedbackBox.innerHTML = "💡 Select action options above to see your target bar drop!";
+            } else {
+                feedbackBox.style.borderColor = "var(--accent-green)";
+                feedbackBox.innerHTML = 🎉 Mitigation Analytics:<br>Selected reduction frameworks prevent <span style="color: var(--accent-green); font-weight: bold;">${totalSaved} kg of atmospheric CO₂</span> loading annually.;
+            }
         }
     </script>
 </body>
