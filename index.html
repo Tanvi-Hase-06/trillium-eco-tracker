@@ -18,21 +18,28 @@
         .card { background-color: var(--bg-card); border: 1px solid #374151; border-radius: 12px; padding: 24px; width: 100%; max-width: 550px; margin-bottom: 20px; }
         h1 { color: var(--accent-green); text-align: center; margin-bottom: 25px; }
         h2 { color: var(--accent-green); font-size: 1.2rem; margin-bottom: 15px; }
+        .guide-box { background: rgba(59, 130, 246, 0.1); border-left: 4px solid var(--accent-blue); padding: 15px; border-radius: 4px; margin-bottom: 20px; }
+        .guide-box ol { margin: 0; padding-left: 20px; font-size: 0.9rem; color: var(--text-muted); }
         input { width: 100%; padding: 12px; margin: 8px 0; background: #1f2937; border: 1px solid #374151; border-radius: 8px; color: white; box-sizing: border-box; }
         button { width: 100%; padding: 15px; background: var(--accent-green); border: none; border-radius: 8px; cursor: pointer; color: #0b0f19; font-weight: bold; margin-top: 10px; }
         .metric-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid #374151; font-size: 0.95rem; }
-        
-        /* New Action Card Styles */
-        .action-card { background: #1f2937; border: 1px solid #374151; padding: 15px; border-radius: 10px; margin: 10px 0; display: flex; align-items: start; gap: 15px; cursor: pointer; }
-        .action-card:hover { border-color: var(--accent-green); }
+        .action-card { background: #1f2937; border: 1px solid #374151; padding: 15px; border-radius: 8px; margin: 10px 0; display: flex; align-items: start; gap: 10px; }
         .action-card input { width: 20px; height: 20px; margin-top: 3px; accent-color: var(--accent-green); }
-        .action-info strong { display: block; color: var(--accent-green); margin-bottom: 4px; }
-        .action-info span { font-size: 0.85rem; color: var(--text-muted); }
     </style>
 </head>
 <body>
 
     <h1>🌱 TrilliumEco Carbon Tracker</h1>
+
+    <!-- New Guide Section -->
+    <div class="card guide-box">
+        <h2>📖 How to Use</h2>
+        <ol>
+            <li>Enter your monthly electricity usage (kWh) and daily travel distances.</li>
+            <li>Click "Compile Analytics" to see your current annual carbon footprint.</li>
+            <li>Select checkboxes in the Abatement section to model how lifestyle changes reduce your emissions.</li>
+        </ol>
+    </div>
 
     <div class="card">
         <h2>1. Carbon Telemetry Input</h2>
@@ -51,30 +58,9 @@
         <div class="metric-row"><strong>Modeled Abatement Target:</strong> <strong id="lblTarget" style="color:var(--accent-green)">0 kg/yr</strong></div>
         
         <h2 style="margin-top: 25px;">3. Carbon Abatement Options</h2>
-        
-        <label class="action-card">
-            <input type="checkbox" id="chkSolar" class="reducer">
-            <div class="action-info">
-                <strong>Solar PV Transition (-800kg)</strong>
-                <span>Switch your residence from grid electricity to clean, renewable rooftop solar power.</span>
-            </div>
-        </label>
-        
-        <label class="action-card">
-            <input type="checkbox" id="chkVampire" class="reducer">
-            <div class="action-info">
-                <strong>Vampire Load Isolation (-150kg)</strong>
-                <span>Unplug standby electronics to eliminate hidden power waste.</span>
-            </div>
-        </label>
-        
-        <label class="action-card">
-            <input type="checkbox" id="chkEvSolar" class="reducer">
-            <div class="action-info">
-                <strong>Offset Solar EV Charge (-250kg)</strong>
-                <span>Configure e-bike charging cycles to sync only with active solar output.</span>
-            </div>
-        </label>
+        <label class="action-card"><input type="checkbox" id="chkSolar" class="reducer"> <div><strong>Solar PV Transition (-800kg)</strong><br><small>Switch to renewable rooftop solar.</small></div></label>
+        <label class="action-card"><input type="checkbox" id="chkVampire" class="reducer"> <div><strong>Vampire Load Isolation (-150kg)</strong><br><small>Unplug inactive electronics.</small></div></label>
+        <label class="action-card"><input type="checkbox" id="chkEvSolar" class="reducer"> <div><strong>Offset Solar EV Charge (-250kg)</strong><br><small>Sync charging with solar peak.</small></div></label>
     </div>
 
     <script>
