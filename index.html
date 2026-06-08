@@ -6,151 +6,235 @@
     <title>TrilliumEco Tracker</title>
     <style>
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background-color: #0b0f19;
             color: #f3f4f6;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             margin: 0;
             padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
-        header {
+        .header {
             text-align: center;
-            margin-bottom: 40px;
-            border-bottom: 2px solid #1e293b;
-            padding-bottom: 20px;
+            margin-bottom: 30px;
         }
-        h1 { color: #10b981; margin-bottom: 5px; }
-        header p { color: #9ca3af; margin: 0; }
-        main { max-width: 650px; margin: 0 auto; }
+        .header h1 {
+            color: #10b981;
+            margin: 5px 0;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+        .header p {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            margin: 0;
+        }
         .card {
-            background: #111827;
-            padding: 30px;
-            border-radius: 16px;
-            border: 1px solid #1e293b;
-            margin-bottom: 25px;
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.3);
+            background-color: #111827;
+            border: 1px solid #1f2937;
+            border-radius: 12px;
+            padding: 24px;
+            width: 100%;
+            max-width: 450px;
+            box-sizing: border-box;
+            margin-bottom: 20px;
         }
-        h2 { color: #34d399; margin-top: 0; font-size: 1.25rem; }
-        label { display: block; margin: 20px 0 8px; color: #d1d5db; font-weight: 500; }
-        input[type="number"] {
+        .card h2 {
+            color: #10b981;
+            font-size: 1.2rem;
+            margin-top: 0;
+            margin-bottom: 20px;
+        }
+        .input-group {
+            margin-bottom: 20px;
+        }
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+        .input-group input {
             width: 100%;
             padding: 12px;
-            background: #1f2937;
+            background-color: #1f2937;
             border: 1px solid #374151;
             border-radius: 8px;
-            color: white;
+            color: #ffffff;
             box-sizing: border-box;
             font-size: 1rem;
         }
-        input[type="number"]:focus { border-color: #10b981; outline: none; }
-        button {
+        .btn {
+            width: 100%;
             background-color: #10b981;
             color: #0b0f19;
             border: none;
             padding: 14px;
-            font-size: 1rem;
-            font-weight: 700;
             border-radius: 8px;
+            font-size: 1rem;
+            font-weight: bold;
             cursor: pointer;
-            width: 100%;
-            margin-top: 25px;
             transition: background 0.2s;
         }
-        button:hover { background-color: #059669; }
-        .checkbox-group label {
+        .btn:hover {
+            background-color: #059669;
+        }
+        .checkbox-group {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+        .checkbox-label {
             display: flex;
             align-items: center;
-            background: #1f2937;
+            background-color: #1f2937;
             padding: 14px;
             border-radius: 8px;
-            cursor: pointer;
             border: 1px solid #374151;
-            margin-bottom: 10px;
+            cursor: pointer;
+            font-size: 0.9rem;
         }
-        input[type="checkbox"] { margin-right: 12px; transform: scale(1.2); }
+        .checkbox-label input {
+            margin-right: 12px;
+            width: 18px;
+            height: 18px;
+            accent-color: #10b981;
+        }
+        .metric-item {
+            margin: 10px 0;
+            font-size: 0.95rem;
+            display: flex;
+            justify-content: space-between;
+        }
+        .insight-box {
+            background: #1f2937; 
+            padding: 14px; 
+            border-radius: 8px; 
+            border-left: 4px solid #10b981; 
+            margin-top: 15px; 
+            font-size: 0.9rem; 
+            line-height: 1.4;
+        }
     </style>
 </head>
 <body>
-    <header>
+
+    <!-- Header Section -->
+    <div class="header">
         <h1>⚡ TrilliumEco Tracker</h1>
         <p>Architecting Personal Carbon Efficiency & Power Optimization</p>
-    </header>
+    </div>
 
-    <main>
-        <section class="card">
-            <h2>1. Carbon Telemetry Input (Track)</h2>
-            <form id="telemetryForm">
-                <label for="electricity">Domestic Energy Consumption (Monthly kWh):</label>
-                <input type="number" id="electricity" placeholder="e.g., 150" required>
+    <!-- Section 1: Inputs -->
+    <div class="card">
+        <h2>1. Carbon Telemetry Input (Track)</h2>
+        <div class="input-group">
+            <label for="electricity">Domestic Energy Consumption (Monthly kWh):</label>
+            <input type="number" id="electricity" placeholder="e.g., 155" value="155">
+        </div>
+        <div class="input-group">
+            <label for="commute">Daily Transport Telemetry (Travel km/day):</label>
+            <input type="number" id="commute" placeholder="e.g., 34" value="34">
+        </div>
+        <button class="btn" onclick="compileFootprint()">Compile Analytics</button>
+    </div>
 
-                <label for="commute">Daily Transport Telemetry (Car km/day):</label>
-                <input type="number" id="commute" placeholder="e.g., 25" required>
+    <!-- Section 2: Results -->
+    <div class="card" id="insightsCard" style="display: none;">
+        <h2>2. Architectural Insights Compiler (Understand)</h2>
+        <div id="resultsDisplay"></div>
+    </div>
 
-                <button type="button" onclick="compileFootprint()">Compile Analytics</button>
-            </form>
-        </section>
+    <!-- Section 3: Optimization Vectors -->
+    <div class="card" id="optimizationCard" style="display: none;">
+        <h2>3. Hardware-Class Mitigation Vectors (Reduce)</h2>
+        <p style="font-size: 0.85rem; color: #9ca3af; margin-bottom: 15px;">
+            Toggle optimization profiles to dynamically scale down your projected load footprint:
+        </p>
+        <div class="checkbox-group">
+            <label class="checkbox-label">
+                <input type="checkbox" id="vector1" onchange="optimizeProfiles()">
+                <span>Transition to Smart Microgrids (-800 kg CO2e/yr)</span>
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" id="vector2" onchange="optimizeProfiles()">
+                <span>Deploy Workstation Low-Power States (-150 kg CO2e/yr)</span>
+            </label>
+            <label class="checkbox-label">
+                <input type="checkbox" id="vector3" onchange="optimizeProfiles()">
+                <span>Optimize E-Bike Charging via Solar Off-Grid (-250 kg CO2e/yr)</span>
+            </label>
+        </div>
+    </div>
 
-        <section class="card" id="insightsCard" style="display:none;">
-            <h2>2. Architectural Insights Compiler (Understand)</h2>
-            <div id="resultsDisplay"></div>
-        </section>
+    <!-- Interactive JavaScript Engine -->
+    <script>
+        let coreFootprint = 0;
+        let originalGridEmissions = 0;
+        let originalTransportEmissions = 0;
 
-        <section class="card" id="optimizationCard" style="display:none;">
-            <h2>3. Hardware-Class Mitigation Vectors (Reduce)</h2>
-            <p>Toggle optimization profiles to dynamically scale down your projected load footprint:</p>
-            <div class="checkbox-group">
-                <label>
-                    <input type="checkbox" id="vector1" onchange="optimizeProfiles()"> Transition to Smart Microgrids (-800 kg CO2e/yr)
-                </label>
-                <label>
-                    <input type="checkbox" id="vector2" onchange="optimizeProfiles()"> Deploy Workstation Low-Power States (-150 kg CO2e/yr)
-                </label>
-                <label>
-                    <input type="checkbox" id="vector3" onchange="optimizeProfiles()"> Optimize Mobility via Mass Transit (-1200 kg CO2e/yr)
-                </label>
-            </div>
-        </section>
-    </main>
+        function compileFootprint() {
+            const electricity = parseFloat(document.getElementById('electricity').value) || 0;
+            const commute = parseFloat(document.getElementById('commute').value) || 0;
 
-   <script>
-    let coreFootprint = 0;
+            // Environmental baseline emission coefficients
+            originalGridEmissions = electricity * 0.85 * 12;
+            
+            // Evaluates transit: detects if travel matches low emission parameters (e-bike range)
+            const emissionFactor = (commute <= 40) ? 0.05 : 0.21; 
+            originalTransportEmissions = commute * emissionFactor * 365;
+            
+            coreFootprint = originalGridEmissions + originalTransportEmissions;
 
-    function compileFootprint() {
-        const electricity = parseFloat(document.getElementById('electricity').value) || 0;
-        const commute = parseFloat(document.getElementById('commute').value) || 0;
+            // Unhide the analysis layout results blocks
+            document.getElementById('insightsCard').style.display = 'block';
+            document.getElementById('optimizationCard').style.display = 'block';
 
-        // Standard baseline emission factors
-        const annualGridEmissions = electricity * 0.85 * 12;
-        const annualTransportEmissions = commute * 0.21 * 365;
-        
-        coreFootprint = annualGridEmissions + annualTransportEmissions;
+            // Run the system optimization logic
+            optimizeProfiles();
+        }
 
-        // Unhide the results blocks
-        document.getElementById('insightsCard').style.display = 'block';
-        document.getElementById('optimizationCard').style.display = 'block';
+        function optimizeProfiles() {
+            let reduction = 0;
 
-        // Run the math updater
-        updateOptimization();
-    }
+            // Compile mitigation vector check statuses
+            if (document.getElementById('vector1').checked) reduction += 800;
+            if (document.getElementById('vector2').checked) reduction += 150;
+            if (document.getElementById('vector3').checked) reduction += 250;
 
-    function updateOptimization() {
-        let reduction = 0;
+            const targetFootprint = Math.max(0, coreFootprint - reduction);
 
-        // Calculate active mitigation vector profiles
-        if (document.getElementById('vector1').checked) reduction += 800;
-        if (document.getElementById('vector2').checked) reduction += 150;
-        if (document.getElementById('vector3').checked) reduction += 1200;
-
-        const targetFootprint = Math.max(0, coreFootprint - reduction);
-
-        // Render responsive metrics onto UI
-        document.getElementById('resultsDisplay').innerHTML = `
-            <p>Total Compiled Baseline Load: <strong style="color: #ff4a4a;">${coreFootprint.toFixed(2)} kg CO2e/year</strong></p>
-            <p>Optimized System Target: <strong style="color: #10b981;">${targetFootprint.toFixed(2)} kg CO2e/year</strong></p>
-            <div class="summary-box" style="background: #1f2937; padding: 12px; border-radius: 8px; border-left: 4px solid #10b981; margin-top: 15px;">
-                <strong>System Insight Summary:</strong> Implementing the selected mitigation layout vectors reduces system environmental strain by <span style="color: #10b981; font-weight: bold;">${reduction} kg CO2e/year</span>.
-            </div>
-        `;
-    }
-</script>
+            // Dynamically rewrite layout updates to the browser interface with customized insights
+            document.getElementById('resultsDisplay').innerHTML = `
+                <div class="metric-item">
+                    <span>Domestic Grid Footprint:</span>
+                    <strong>${originalGridEmissions.toFixed(2)} kg CO2e/yr</strong>
+                </div>
+                <div class="metric-item">
+                    <span>Transit System Footprint:</span>
+                    <strong>${originalTransportEmissions.toFixed(2)} kg CO2e/yr</strong>
+                </div>
+                <hr style="border-color: #1f2937; margin: 12px 0;">
+                <div class="metric-item">
+                    <span>Total Baseline Environmental Load:</span>
+                    <strong style="color: #ff4a4a;">${coreFootprint.toFixed(2)} kg CO2e/year</strong>
+                </div>
+                <div class="metric-item">
+                    <span>Optimized System Target:</span>
+                    <strong style="color: #10b981;">${targetFootprint.toFixed(2)} kg CO2e/year</strong>
+                </div>
+                
+                <div class="insight-box">
+                    <strong>💡 Personalized Insights:</strong><br>
+                    • Your transit footprint is optimized via electric mobility. Charging your vehicle battery accounts for roughly <strong>5.10 kWh</strong> of your monthly home grid consumption.<br>
+                    • Selected mitigations successfully scale down your systemic environmental footprint load by <span style="color: #10b981; font-weight: bold;">${reduction} kg CO2e/year</span>.
+                </div>
+            `;
+        }
+    </script>
 </body>
 </html>
