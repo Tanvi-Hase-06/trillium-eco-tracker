@@ -212,26 +212,26 @@
         <h2>1. Enter Your Everyday Numbers</h2>
         
         <div class="input-group">
-            <label for="electricity">Monthly Electricity Bill Units:</label>
+            <label for="billInput">Monthly Electricity Bill Units:</label>
             <div class="input-hint">Just copy the raw units or kWh number direct from your statement.</div>
-            <input type="number" id="electricity" placeholder="eg 150">
+            <input type="number" id="billInput" placeholder="eg 150">
         </div>
         
         <hr style="border-color: #1f2937; margin: 20px 0;">
 
         <div class="input-group">
-            <label for="petrolCommute">Daily Petrol Vehicle Travel (km):</label>
+            <label for="petrolInput">Daily Petrol Vehicle Travel (km):</label>
             <div class="input-hint">How many kilometers do you drive a petrol bike or car on a normal day?</div>
-            <input type="number" id="petrolCommute" placeholder="eg 20" value="0">
+            <input type="number" id="petrolInput" placeholder="eg 20" value="0">
         </div>
 
         <div class="input-group">
-            <label for="ebikeCommute">Daily Electric Bike Travel (km):</label>
+            <label for="ebikeInput">Daily Electric Bike Travel (km):</label>
             <div class="input-hint">How many kilometers do you ride an electric scooter or bike on a normal day?</div>
-            <input type="number" id="ebikeCommute" placeholder="eg 34" value="0">
+            <input type="number" id="ebikeInput" placeholder="eg 34" value="0">
         </div>
         
-        <button class="btn" onclick="compileFootprint()">Calculate My Footprint</button>
+        <button class="btn" onclick="startCalculation()">Calculate My Footprint</button>
     </div>
 
     <div class="card" id="insightsCard" style="display: none;">
@@ -246,101 +246,102 @@
         </p>
         <div class="checkbox-group">
             <label class="checkbox-label">
-                <input type="checkbox" id="vector1" onchange="optimizeProfiles()">
+                <input type="checkbox" id="vector1" onchange="applySavings()">
                 <span>Switch home electricity to solar panels (-800 kg CO₂/yr)</span>
             </label>
             <label class="checkbox-label">
-                <input type="checkbox" id="vector2" onchange="optimizeProfiles()">
+                <input type="checkbox" id="vector2" onchange="applySavings()">
                 <span>Turn off laptops & appliances when not using them (-150 kg CO₂/yr)</span>
             </label>
             <label class="checkbox-label">
-                <input type="checkbox" id="vector3" onchange="optimizeProfiles()">
+                <input type="checkbox" id="vector3" onchange="applySavings()">
                 <span>Use clean solar energy to charge your vehicles (-250 kg CO₂/yr)</span>
             </label>
         </div>
     </div>
 
     <script>
-        let coreFootprint = 0;
-        let originalGridEmissions = 0;
-        let originalTransportEmissions = 0;
-        let calculatedEbikeUnits = 0;
+        // Global variables to store the footprint metrics securely
+        let totalStartingFootprint = 0;
+        let powerGridEmissions = 0;
+        let directPetrolEmissions = 0;
+        let hiddenUnitsFromEbike = 0;
 
-        function compileFootprint() {
-            // FIXED: Fetches 'electricity' matching the updated input ID
-            const billUnits = parseFloat(document.getElementById('electricity').value) || 0;
-            const petrolKm = parseFloat(document.getElementById('petrolCommute').value) || 0;
-            const ebikeKm = parseFloat(document.getElementById('ebikeCommute').value) || 0;
+        function startCalculation() {
+            // Fetch inputs cleanly using completely basic names to prevent bugs
+            const rawBill = parseFloat(document.getElementById('billInput').value) || 0;
+            const rawPetrol = parseFloat(document.getElementById('petrolInput').value) || 0;
+            const rawEbike = parseFloat(document.getElementById('ebikeInput').value) || 0;
 
-            // Base electricity calculations
-            const baseGridEmissions = billUnits * 0.85 * 12;
-            
-            // Petrol calculations (direct exhaust tailpipe emissions)
-            const petrolEmissions = petrolKm * 0.21 * 365;
-            
-            // Electric bike charging overhead calculations
-            const dailyEbikeKwh = ebikeKm * 0.01 * 0.5;
-            calculatedEbikeUnits = dailyEbikeKwh * 30;
-            const ebikeGridEmissions = calculatedEbikeUnits * 0.85 * 12;
+            // 1. House footprint calculation
+            const baselineHouseEmissions = rawBill * 0.85 * 12;
 
-            // Bind values to layout variables
-            originalGridEmissions = baseGridEmissions + ebikeGridEmissions;
-            originalTransportEmissions = petrolEmissions;
-            coreFootprint = baseGridEmissions + ebikeGridEmissions + petrolEmissions;
+            // 2. Petrol vehicle footprint calculation
+            directPetrolEmissions = rawPetrol * 0.21 * 365;
 
-            // Make the hidden result cards appear seamlessly
+            // 3. E-bike wall charging calculation
+            const dailyKwhDraw = rawEbike * 0.01 * 0.5;
+            hiddenUnitsFromEbike = dailyKwhDraw * 30;
+            const ebikeOverheadEmissions = hiddenUnitsFromEbike * 0.85 * 12;
+
+            // Group and combine metrics safely
+            powerGridEmissions = baselineHouseEmissions + ebikeOverheadEmissions;
+            totalStartingFootprint = baselineHouseEmissions + ebikeOverheadEmissions + directPetrolEmissions;
+
+            // Unhide presentation sections smoothly
             document.getElementById('insightsCard').style.display = 'block';
             document.getElementById('optimizationCard').style.display = 'block';
 
-            optimizeProfiles();
+            // Trigger the calculations view update
+            applySavings();
         }
 
-        function optimizeProfiles() {
-            let reduction = 0;
+        function applySavings() {
+            let selectedReduction = 0;
 
-            if (document.getElementById('vector1').checked) reduction += 800;
-            if (document.getElementById('vector2').checked) reduction += 150;
-            if (document.getElementById('vector3').checked) reduction += 250;
+            if (document.getElementById('vector1').checked) selectedReduction += 800;
+            if (document.getElementById('vector2').checked) selectedReduction += 150;
+            if (document.getElementById('vector3').checked) selectedReduction += 250;
 
-            const targetFootprint = Math.max(0, coreFootprint - reduction);
-            const remainingPercentage = coreFootprint > 0 ? (targetFootprint / coreFootprint) * 100 : 0;
+            const targetFootprint = Math.max(0, totalStartingFootprint - selectedReduction);
+            const fillPercentage = totalStartingFootprint > 0 ? (targetFootprint / totalStartingFootprint) * 100 : 0;
 
-            let badgeHTML = <span class="status-badge" style="background-color: #ef4444; color: #ffffff;">Standard Footprint</span>;
-            if (reduction >= 1000) {
-                badgeHTML = <span class="status-badge" style="background-color: #10b981; color: #0b0f19;">Great Progress!</span>;
-            } else if (reduction > 0) {
-                badgeHTML = <span class="status-badge" style="background-color: #f59e0b; color: #0b0f19;">Saving Active</span>;
+            let badgeMarkup = <span class="status-badge" style="background-color: #ef4444; color: #ffffff;">Standard Footprint</span>;
+            if (selectedReduction >= 1000) {
+                badgeMarkup = <span class="status-badge" style="background-color: #10b981; color: #0b0f19;">Great Progress!</span>;
+            } else if (selectedReduction > 0) {
+                badgeMarkup = <span class="status-badge" style="background-color: #f59e0b; color: #0b0f19;">Saving Active</span>;
             }
 
-            const petrolKm = parseFloat(document.getElementById('petrolCommute').value) || 0;
-            const ebikeKm = parseFloat(document.getElementById('ebikeCommute').value) || 0;
-            let customizedText = "";
+            const rawPetrol = parseFloat(document.getElementById('petrolInput').value) || 0;
+            const rawEbike = parseFloat(document.getElementById('ebikeInput').value) || 0;
+            let descriptiveSummary = "";
 
-            if (petrolKm > 0 && ebikeKm > 0) {
-                customizedText = You use a mixed transit lifestyle! Your petrol vehicle releases carbon out of the exhaust tailpipe, while your electric bike adds about <strong>${calculatedEbikeUnits.toFixed(1)} hidden units</strong> to your power line footprint to handle charging.;
-            } else if (petrolKm > 0) {
-                customizedText = "Your travel footprint comes entirely from burning petrol fuel.";
-            } else if (ebikeKm > 0) {
-                customizedText = "Your transit footprint relies completely on the electric power grid.";
+            if (rawPetrol > 0 && rawEbike > 0) {
+                descriptiveSummary = You use a mixed transit lifestyle! Your petrol vehicle releases carbon out of the exhaust tailpipe, while your electric bike adds about <strong>${hiddenUnitsFromEbike.toFixed(1)} hidden units</strong> to your power line footprint to handle charging.;
+            } else if (rawPetrol > 0) {
+                descriptiveSummary = "Your travel footprint comes entirely from burning petrol fuel.";
+            } else if (rawEbike > 0) {
+                descriptiveSummary = "Your transit footprint relies completely on the electric power grid.";
             } else {
-                customizedText = "Your low-travel configuration keeps travel emissions baseline minimal.";
+                descriptiveSummary = "Your low-travel configuration keeps travel emissions baseline minimal.";
             }
 
             document.getElementById('resultsDisplay').innerHTML = `
                 <div class="metric-item">
                     <span>Electricity & Power Footprint:</span>
-                    <strong>${originalGridEmissions.toFixed(1)} kg CO₂/year</strong>
+                    <strong>${powerGridEmissions.toFixed(1)} kg CO₂/year</strong>
                 </div>
                 <div class="metric-item">
                     <span>Direct Petrol Tailpipe Footprint:</span>
-                    <strong>${originalTransportEmissions.toFixed(1)} kg CO₂/year</strong>
+                    <strong>${directPetrolEmissions.toFixed(1)} kg CO₂/year</strong>
                 </div>
                 
                 <hr style="border-color: #1f2937; margin: 16px 0;">
                 
                 <div class="metric-item">
                     <span>Your Total Starting Footprint:</span>
-                    <strong style="color: #ef4444;">${coreFootprint.toFixed(1)} kg CO₂/year</strong>
+                    <strong style="color: #ef4444;">${totalStartingFootprint.toFixed(1)} kg CO₂/year</strong>
                 </div>
                 <div class="progress-bar-container">
                     <div class="progress-bar baseline" style="width: 100%"></div>
@@ -351,18 +352,18 @@
                     <strong style="color: #10b981;">${targetFootprint.toFixed(1)} kg CO₂/year</strong>
                 </div>
                 <div class="progress-bar-container">
-                    <div class="progress-bar" style="width: ${remainingPercentage}%"></div>
+                    <div class="progress-bar" style="width: ${fillPercentage}%"></div>
                 </div>
 
                 <div class="metric-item">
                     <span>Current Status:</span>
-                    ${badgeHTML}
+                    ${badgeMarkup}
                 </div>
                 
                 <div class="insight-box">
                     <strong>💡 Smart Summary:</strong><br>
-                    • ${customizedText}<br><br>
-                    • Activating your choices below prevents up to <span style="color: #10b981; font-weight: bold;">${reduction} kg of CO₂</span> from entering the atmosphere every year.
+                    • ${descriptiveSummary}<br><br>
+                    • Activating your choices below prevents up to <span style="color: #10b981; font-weight: bold;">${selectedReduction} kg of CO₂</span> from entering the atmosphere every year.
                 </div>
             `;
         }
